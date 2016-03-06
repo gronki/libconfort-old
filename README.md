@@ -1,0 +1,2 @@
+# miniconf
+Mini config utility

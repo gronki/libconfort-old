@@ -1,0 +1,4 @@
+libminiconf.so*
+libminiconf.a
+*.o
+*.mod

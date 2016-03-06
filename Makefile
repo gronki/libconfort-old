@@ -18,7 +18,7 @@ miniconf_fort.o: miniconf_fort.f90
 	gfortran -O3  -fPIC  -c $<
 
 clean:
-	rm -f *.o *.mod
+	rm -f *.o *.mod *.a *.so*
 
 install: libminiconf.so.1 libminiconf.a
 	install -dvZ $(INCLUDEDIR)

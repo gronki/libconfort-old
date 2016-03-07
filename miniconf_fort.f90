@@ -22,7 +22,7 @@
 
 
 
-module miniconf_fort
+module miniconf
 
     use iso_c_binding
 

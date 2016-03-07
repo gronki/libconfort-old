@@ -23,7 +23,7 @@ clean:
 install: libminiconf.so.1 libminiconf.a
 	install -dvZ $(INCLUDEDIR)
 	install -pvZ miniconf.h $(INCLUDEDIR)
-	install -pvZ miniconf_fort.mod $(INCLUDEDIR)
+	install -pvZ miniconf.mod $(INCLUDEDIR)
 	install -dvZ $(LIBDIR)
 	install -pvZ libminiconf.so.1 $(LIBDIR)
 	install -pvZ libminiconf.a $(LIBDIR)

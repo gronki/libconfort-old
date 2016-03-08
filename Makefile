@@ -5,11 +5,11 @@ LIBNAME=libminiconf.so
 CC=gcc
 F90=gfortran
 
-all: $(LIBNAME).1 libminiconf.a
+all: $(LIBNAME) libminiconf.a
 
 
-$(LIBNAME).1: miniconf.o miniconf.mod
-	$(CC) -shared miniconf.o -o $(LIBNAME).1
+$(LIBNAME): miniconf.o miniconf.mod
+	$(CC) -shared miniconf.o -o $(LIBNAME)
 
 libminiconf.a: miniconf.o miniconf.mod
 	ar rcs $@ miniconf.o
@@ -29,6 +29,5 @@ install: $(LIBNAME).1 libminiconf.a
 	install -pvZ miniconf.mod $(INCLUDEDIR)
 	install -pvZ miniconf_fort.f90 $(INCLUDEDIR)
 	install -dvZ $(LIBDIR)
-	install -pvZ $(LIBNAME).1 $(LIBDIR)
+	install -pvZ $(LIBNAME) $(LIBDIR)
 	install -pvZ libminiconf.a $(LIBDIR)
-	ln -sfr $(LIBDIR)/$(LIBNAME).1 $(LIBDIR)/$(LIBNAME)

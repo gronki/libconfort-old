@@ -23,7 +23,7 @@ miniconf.mod: miniconf_fort.f90
 clean:
 	rm -f *.o *.mod *.a *.so* *.dll*
 
-install: $(LIBNAME).1 libminiconf.a
+install: $(LIBNAME) libminiconf.a
 	install -dvZ $(INCLUDEDIR)
 	install -pvZ miniconf.h $(INCLUDEDIR)
 	install -pvZ miniconf.mod $(INCLUDEDIR)

@@ -27,6 +27,7 @@ install: $(LIBNAME).1 libminiconf.a
 	install -dvZ $(INCLUDEDIR)
 	install -pvZ miniconf.h $(INCLUDEDIR)
 	install -pvZ miniconf.mod $(INCLUDEDIR)
+	install -pvZ miniconf_fort.f90 $(INCLUDEDIR)
 	install -dvZ $(LIBDIR)
 	install -pvZ $(LIBNAME).1 $(LIBDIR)
 	install -pvZ libminiconf.a $(LIBDIR)

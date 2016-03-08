@@ -1,6 +1,7 @@
 
-INCLUDEDIR=/usr/local/include
-LIBDIR=/usr/local/lib
+PREFIX=/usr/local
+INCLUDEDIR=$(PREFIX)/include/miniconf
+LIBDIR=$(PREFIX)/lib
 LIBNAME=libminiconf.so
 CC=gcc
 F90=gfortran
@@ -23,11 +24,16 @@ miniconf.mod: miniconf_fort.f90
 clean:
 	rm -f *.o *.mod *.a *.so* *.dll*
 
+
 install: $(LIBNAME) libminiconf.a
 	install -dvZ $(INCLUDEDIR)
 	install -pvZ miniconf.h $(INCLUDEDIR)
 	install -pvZ miniconf.mod $(INCLUDEDIR)
 	install -pvZ miniconf_fort.f90 $(INCLUDEDIR)
+
 	install -dvZ $(LIBDIR)
 	install -pvZ $(LIBNAME) $(LIBDIR)
 	install -pvZ libminiconf.a $(LIBDIR)
+
+	install -dvZ $(PREFIX)/lib/pkgconfig/
+	install -pvZ miniconf.pc $(PREFIX)/lib/pkgconfig/

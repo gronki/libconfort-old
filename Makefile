@@ -16,10 +16,10 @@ libminiconf.a: miniconf.o miniconf.mod
 	ar rcs $@ miniconf.o
 
 miniconf.o: miniconf.c
-	$(CC) -O3 -fPIC  -c $<
+	$(CC) -O2 -fPIC  -c $<
 
 miniconf.mod: miniconf_fort.f90
-	$(F90) -O3  -fPIC  -c $<
+	$(F90) -O2  -fPIC  -c $<
 
 clean:
 	rm -f *.o *.mod *.a *.so* *.dll*

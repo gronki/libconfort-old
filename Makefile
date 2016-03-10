@@ -22,7 +22,11 @@ miniconf.mod: miniconf_fort.f90
 	$(F90) -O2  -fPIC  -c $<
 
 clean:
-	rm -f *.o *.mod *.a *.so* *.dll*
+	rm -f *.o
+
+erase: clean
+	rm -f *.mod *.a *.so.* *.dll
+
 
 
 install: $(LIBNAME) libminiconf.a

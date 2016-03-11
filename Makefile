@@ -3,8 +3,8 @@ PREFIX=/usr/local
 INCLUDEDIR=$(PREFIX)/include/miniconf
 LIBDIR=$(PREFIX)/lib
 LIBNAME=libminiconf.so
-CC=gcc
-F90=gfortran
+CC=cc
+FORT=f95
 
 all: $(LIBNAME) libminiconf.a
 
@@ -19,7 +19,7 @@ miniconf.o: miniconf.c
 	$(CC) -O2 -fPIC  -c $<
 
 miniconf.mod: miniconf_fort.f90
-	$(F90) -O2  -fPIC  -c $<
+	$(FORT) -O2  -fPIC  -c $<
 
 clean:
 	rm -f *.o
@@ -39,5 +39,5 @@ install: $(LIBNAME) libminiconf.a
 	install -pvZ $(LIBNAME) $(LIBDIR)
 	install -pvZ libminiconf.a $(LIBDIR)
 
-	install -dvZ $(PREFIX)/lib/pkgconfig/
-	install -pvZ miniconf.pc $(PREFIX)/lib/pkgconfig/
+	install -dvZ $(LIBDIR)/pkgconfig
+	install -pvZ miniconf.pc $(LIBDIR)/pkgconfig

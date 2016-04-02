@@ -24,7 +24,7 @@ int main() {
 
     for (size_t i = 1; i <= 6; i++) {
         sprintf(buf1,"%s%d", "key", i);
-        if ( mincf_get_rq(cfg,buf1,buf2,1024) ) {
+        if ( mincf_get_rq(cfg,buf1,buf2,1024) == MINCF_NOT_FOUND ) {
             fprintf(stderr,"entry '%s' not found.\n", buf1);
             return -1;
         }

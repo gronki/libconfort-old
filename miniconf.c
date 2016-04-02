@@ -90,7 +90,6 @@ miniconf* mincf_read(FILE* in) {
             conf->records = tmprec;
             conf -> records_sz = conf -> records_sz * 2;
         }
-// printf("'%c', s:%d, h:%d, c:%d, r:%d\n", ch, state, hold, comment, conf->n_records);
         // take the current record
         rec = &(conf->records[conf->n_records]);
 
@@ -194,7 +193,6 @@ miniconf* mincf_read(FILE* in) {
                                 break;
                         }
                         rec->vn = (i+1) - rec->v0;
-// printf("append! n:%d, l:%d\n",conf->n_records,rec->vn);
                         conf->n_records++;
                 }
                 if (ch == '#') state = PST_B4LABEL;
@@ -203,7 +201,6 @@ miniconf* mincf_read(FILE* in) {
                 if ( strchr(s_nums,ch) != NULL ) {
                     // we allow numerical lists to be continued
                     state = PST_INVALUE;
-// printf("retract... n:%d, l:%d\n",conf->n_records,rec->vn);
                     conf->n_records--;
                 } else {
                     state = PST_B4LABEL;
@@ -214,7 +211,6 @@ miniconf* mincf_read(FILE* in) {
                 if (ch == '"' || ch == '\0') {
                     state = PST_B4LABEL;
                     rec->vn = pos - rec->v0;
-// printf("append! n:%d, l:%d\n",conf->n_records,rec->vn);
                     rec++; conf->n_records++;
                 }
                 break;
@@ -222,15 +218,6 @@ miniconf* mincf_read(FILE* in) {
 
     }
 
-    // conf->longest_val = 0;
-    // rec = &(conf->records[0]);
-    // for ( i = 0; i < (conf->n_records - 1); i++,rec++ ) {
-    //     if ( rec->vn > conf->longest_val ) {
-    //         conf->longest_val = rec->vn;
-    //     }
-    // }
-
-                    // printf("%s: %d: \n",__FILE__,__LINE__);
 
     return conf;
 }
@@ -257,26 +244,26 @@ int mincf_get(miniconf* conf, char* key, char* buf, size_t sz) {
     return MINCF_NOT_FOUND;
 }
 
-int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type) {
-    char buf[128];
-    int r;
-
-    r = mincf_get(conf,key,buf,128);
-    if ( r != MINCF_NOT_FOUND ) {
-        switch (type) {
-            case MINCF_INT:
-                sscanf(buf,"%d",dest);
-                return r;
-            case MINCF_FLOAT:
-                sscanf(buf,"%f",dest);
-                return r;
-            case MINCF_DOUBLE:
-                sscanf(buf,"%lf",dest);
-                return r;
-        }
-    }
-    return MINCF_NOT_FOUND;
-}
+// int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type) {
+//     char buf[128];
+//     int r;
+//
+//     r = mincf_get(conf,key,buf,128);
+//     if ( r != MINCF_NOT_FOUND ) {
+//         switch (type) {
+//             case MINCF_INT:
+//                 sscanf(buf,"%d",dest);
+//                 return r;
+//             case MINCF_FLOAT:
+//                 sscanf(buf,"%f",dest);
+//                 return r;
+//             case MINCF_DOUBLE:
+//                 sscanf(buf,"%lf",dest);
+//                 return r;
+//         }
+//     }
+//     return MINCF_NOT_FOUND;
+// }
 
 int mincf_get_rq(miniconf* conf, char* key, char* buf, size_t sz) {
     int r;

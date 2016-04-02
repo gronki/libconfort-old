@@ -61,7 +61,7 @@ typedef struct {
  */
 miniconf* mincf_read(FILE* f);
 int mincf_get(miniconf* conf, char* key, char* buf, size_t sz);
-int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type);
+// int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type);
 int mincf_get_rq(miniconf* conf, char* key, char* buf, size_t sz);
 void mincf_free(miniconf* conf);
 

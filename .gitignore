@@ -1,4 +1,5 @@
-libminiconf.so*
-libminiconf.a
+*.so
+*.a
 *.o
 *.mod
+/test/bin

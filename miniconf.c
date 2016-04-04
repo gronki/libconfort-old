@@ -22,7 +22,7 @@
     CHANGELOG:
     25/02/16 get now searches backwards so that the last
         duplicated entry is found
-    01/02/16 Added mincf_get_rq.
+    01/02/16 Added mincf_get_req.
 ************************************************/
 
 
@@ -59,7 +59,7 @@ miniconf* mincf_read(FILE* in) {
     memset(conf, 0, sizeof(miniconf));
 
     // create buffer
-    conf -> buffer_sz = 1024;
+    conf -> buffer_sz = mincf_bufsz;
     conf -> buffer = (char*) malloc(conf -> buffer_sz);
     if (!conf -> buffer) {
         mincf_free(conf);
@@ -244,34 +244,25 @@ int mincf_get(miniconf* conf, char* key, char* buf, size_t sz) {
     return MINCF_NOT_FOUND;
 }
 
-// int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type) {
-//     char buf[128];
-//     int r;
-//
-//     r = mincf_get(conf,key,buf,128);
-//     if ( r != MINCF_NOT_FOUND ) {
-//         switch (type) {
-//             case MINCF_INT:
-//                 sscanf(buf,"%d",dest);
-//                 return r;
-//             case MINCF_FLOAT:
-//                 sscanf(buf,"%f",dest);
-//                 return r;
-//             case MINCF_DOUBLE:
-//                 sscanf(buf,"%lf",dest);
-//                 return r;
-//         }
-//     }
-//     return MINCF_NOT_FOUND;
-// }
-
-int mincf_get_rq(miniconf* conf, char* key, char* buf, size_t sz) {
+int mincf_get_req(miniconf* conf, char* key, char* buf, size_t sz) {
     int r;
 
     r = mincf_get(conf,key,buf,sz);
     if ( r == MINCF_NOT_FOUND ) {
-        fprintf(stderr, "miniconf: entry '%s' undefined.\n",key);
+        fprintf(stderr, "miniconf: FATAL: entry '%s' undefined.\n",key);
         mincf_free(conf);
+    }
+    return r;
+}
+
+int mincf_get_def(miniconf* conf, char* key, char* defvalue, char* buf, size_t sz) {
+    int r;
+
+    r = mincf_get(conf,key,buf,sz);
+    if ( r == MINCF_NOT_FOUND ) {
+        fprintf(stderr, "miniconf: entry '%s' not found, assuming '%s'.\n",key,defvalue);
+        strncpy(buf,defvalue,sz);
+        r = strlen(buf);
     }
     return r;
 }
@@ -288,73 +279,79 @@ void mincf_free(miniconf* conf) {
 
 
 /* FORTRAN BINDINGS */
-miniconf* mincf_read_() {
-    return mincf_read(stdin);
+int mincf_read_(miniconf** cfg) {
+    *cfg = mincf_read(stdin);
+    return (*cfg != NULL);
 }
 
-char* mincf_stralloc(char* s, size_t n) {
-    char* buf;
-    buf = (char*)malloc(n+1);
-    strncpy(buf,s,n); buf[n] = 0;
-    return buf;
-}
-
-miniconf* mincf_readf_(char *fn, size_t fn_sz) {
-    char fn2[1024];
-    miniconf* ret = NULL;
+int mincf_readf_(miniconf** cfg, char *fn, size_t fn_sz) {
+    char fn2[mincf_bufsz];
     FILE* f;
 
-    if ( fn_sz > 1023 ) {
-        fprintf(stderr,"miniconf: filename too long. (>1023)\n");
-        return NULL;
-    }
-
-    memset(fn2, 0, 1024);
-    memcpy(fn2, fn, fn_sz);
+    strcpy_f2c(fn2,mincf_bufsz,fn,fn_sz);
 
     if ( (f=fopen(fn2,"r")) != NULL ) {
-        ret = mincf_read(f);
+        *cfg = mincf_read(f);
         fclose(f);
     }
-    return ret;
+    return (*cfg != NULL);
 }
 
-int mincf_get_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz) {
-    char key2[1024];
+int mincf_get_0_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz) {
+    char key_z[mincf_bufsz];
+    char val_z[mincf_bufsz];
     int ret;
-    size_t val_sz;
 
-    if ( key_sz > 1023 ) {
-        fprintf(stderr,"miniconf: key too long. (>1023)\n");
-        return MINCF_NOT_FOUND;
-    }
-
-    // printf("%s:%d:'%s',%d,%d,%d,%12.4e\n",__FILE__,__LINE__,key2,key_sz,buf_sz,conf->n_records,1.21e-5);
-
-    memset(key2,0,1024);
-    memcpy(key2,key,key_sz);
-
-    memset(buf,0,buf_sz);
-    ret = mincf_get(conf,key2,buf,buf_sz);
-    val_sz = strlen(buf);
-    memset(buf + val_sz, ' ', buf_sz - val_sz );
+    strcpy_f2c(key_z,mincf_bufsz,key,key_sz);
+    ret = mincf_get(conf,key_z,val_z,mincf_bufsz);
+    strcpy_c2f(buf,buf_sz,val_z);
 
     return ret;
 }
 
-int mincf_get_rq_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz) {
-    int r; char key2[1024];
+int mincf_get_req_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz) {
+    int r; char key_z[mincf_bufsz];
 
-    r = mincf_get_(conf,key,buf,key_sz,buf_sz);
+    r = mincf_get_0_(conf,key,buf,key_sz,buf_sz);
     if ( r == MINCF_NOT_FOUND ) {
-        memset(key2,0,1024);
-        strncpy(key2,key, (key_sz<1023 ? key_sz : 1023) );
-        fprintf(stderr, "miniconf: entry '%s' undefined.\n",key2);
+        strcpy_f2c(key_z,mincf_bufsz,key,key_sz);
+        fprintf(stderr, "miniconf: '%s' undefined.\n",key_z);
         mincf_free(conf);
+    }
+    return r;
+}
+
+int mincf_get_def_(miniconf* conf, char* key, char *defval, char* buf,
+                size_t key_sz, size_t defval_sz, size_t buf_sz) {
+    int r; char key_z[mincf_bufsz]; char defval_z[mincf_bufsz];
+
+    r = mincf_get_0_(conf,key,buf,key_sz,buf_sz);
+    if ( r == MINCF_NOT_FOUND ) {
+        strcpy_f2c(key_z,mincf_bufsz,key,key_sz);
+        strcpy_f2c(defval_z,mincf_bufsz,defval,defval_sz);
+        fprintf(stderr, "miniconf: '%s' not found, assuming '%s'.\n",key_z,defval_z);
+        strcpy_f2f(buf,buf_sz,defval,defval_sz);
     }
     return r;
 }
 
 void mincf_free_(miniconf* conf) {
     mincf_free(conf);
+}
+
+
+void * strcpy_f2c(char* dest, size_t dest_sz, char* src, size_t src_sz) {
+    memset(dest,0,dest_sz);
+    return memcpy(dest,src, (src_sz<(dest_sz-1) ? src_sz : (dest_sz-1)) );
+}
+
+void * strcpy_c2f(char* dest, size_t dest_sz, char* src) {
+    size_t src_sz = strlen(src);
+    memset(dest,' ',dest_sz);
+    return memcpy(dest,src, (src_sz<dest_sz ? src_sz : dest_sz) );
+}
+
+void * strcpy_f2f(char* dest, size_t dest_sz, char* src, size_t src_sz) {
+    memset(dest,' ',dest_sz);
+    return memcpy(dest,src, (src_sz<dest_sz ? src_sz : dest_sz) );
 }

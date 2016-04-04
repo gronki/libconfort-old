@@ -41,6 +41,7 @@ typedef int MINCF_TYPE;
 #define MINCF_FLOAT 2
 #define MINCF_DOUBLE 3
 #define MINCF_FLOAT64 3
+const size_t mincf_bufsz = 2048;
 
 typedef struct {
     int k0; int kn;
@@ -61,18 +62,19 @@ typedef struct {
  */
 miniconf* mincf_read(FILE* f);
 int mincf_get(miniconf* conf, char* key, char* buf, size_t sz);
-// int mincf_getf(miniconf* conf, char* key, void* dest, MINCF_TYPE type);
-int mincf_get_rq(miniconf* conf, char* key, char* buf, size_t sz);
+int mincf_get_req(miniconf* conf, char* key, char* buf, size_t sz);
+int mincf_get_def(miniconf* conf, char* key, char* defvalue, char* buf, size_t sz);
 void mincf_free(miniconf* conf);
 
-char* mincf_stralloc(char* s, size_t n);
-
 /* FORTRAN BINDINGS */
-miniconf* mincf_read_();
-miniconf* mincf_readf_(char *fn, size_t fn_sz);
-int mincf_get_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz);
-int mincf_get_rq_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz);
+int mincf_read_(miniconf**);
+int mincf_readf_(miniconf**, char *fn, size_t fn_sz);
+int mincf_get_0_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz);
+int mincf_get_req_(miniconf* conf, char* key, char* buf, size_t key_sz, size_t buf_sz);
 void mincf_free_(miniconf* conf);
 
+void * strcpy_f2c(char* dest, size_t dest_sz, char* src, size_t src_sz);
+void * strcpy_c2f(char* dest, size_t dest_sz, char* src);
+void * strcpy_f2f(char* dest, size_t dest_sz, char* src, size_t src_sz);
 
 #endif

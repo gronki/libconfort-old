@@ -41,11 +41,11 @@ module miniconf
         !! @return  Pointer to miniconf structure, containing the configuration or
         !! C_NULL_PTR in case of failure.
         !! @see mincf_free
-        function mincf_readf(fn) result(r)
+        subroutine mincf_readf(cfg,fn)
             import
-            character (len=*) :: fn
-            type(c_ptr) :: r
-        end function
+            character (len=*), intent(in) :: fn
+            type(c_ptr), intent(out) :: cfg
+        end subroutine
 
         !> Reads the configuration information from standard input. Particularly
         !! useful when creating bash scripts since the configuration can be derived
@@ -53,24 +53,17 @@ module miniconf
         !! @return  Pointer to miniconf structure, containing the configuration or
         !! C_NULL_PTR in case of failure.
         !! @see mincf_free
-        function mincf_read() result(r)
+        subroutine mincf_read(cfg)
             import
-            type(c_ptr) :: r
-        end function
+            type(c_ptr), intent(out) :: cfg
+        end subroutine
 
         !> Gets the value of key "key" from config "conf".
         !! @param conf    Pointer to miniconf structure, created ith mincf_read or mincf_readf.
         !! @param key   String containing the key
         !! @param buf   Destination buffer
         !! @return  Length of value, 0 if empty or MINCF_NOT_FOUND if not found.
-        function mincf_get(conf,key,buf) result(r)
-            import
-            character (len=*), intent(in) :: key
-            character (len=*), intent(out) :: buf
-            type(c_ptr),intent(in),value :: conf
-            integer :: r
-        end function
-        function mincf_get_rq(conf,key,buf) result(r)
+        function mincf_get_req(conf,key,buf) result(r)
             import
             character (len=*), intent(in) :: key
             character (len=*), intent(out) :: buf
@@ -87,6 +80,28 @@ module miniconf
             import
             type(c_ptr),intent(in),value :: conf
         end subroutine
+    end interface
+
+    interface mincf_get
+        !> Gets the value of key "key" from config "conf".
+        !! @param conf    Pointer to miniconf structure, created ith mincf_read or mincf_readf.
+        !! @param key   String containing the key
+        !! @param buf   Destination buffer
+        !! @return  Length of value, 0 if empty or MINCF_NOT_FOUND if not found.
+        function mincf_get_0(conf,key,buf) result(r)
+            import
+            character (len=*), intent(in) :: key
+            character (len=*), intent(out) :: buf
+            type(c_ptr),intent(in),value :: conf
+            integer :: r
+        end function
+        function mincf_get_def(conf,key,defval,buf) result(r)
+            import
+            character (len=*), intent(in) :: key,defval
+            character (len=*), intent(out) :: buf
+            type(c_ptr),intent(in),value :: conf
+            integer :: r
+        end function
     end interface
 
 end module

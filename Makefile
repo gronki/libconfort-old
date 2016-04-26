@@ -42,6 +42,6 @@ install: installdirs libminiconf.so.$(release) libminiconf.a
 	install -pvZ miniconf.h $(DESTDIR)$(includedir)
 	install -pvZ miniconf.mod $(DESTDIR)$(includedir)
 	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
-	ln -srf $(DESTDIR)$(libdir)/libminiconf.so.$(release) $(DESTDIR)$(libdir)/libminiconf.so
+	# ln -srf $(DESTDIR)$(libdir)/libminiconf.so.$(release) $(DESTDIR)$(libdir)/libminiconf.so
 	install -pvZ libminiconf.a $(DESTDIR)$(libdir)
 	install -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

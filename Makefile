@@ -1,43 +1,42 @@
 
-PREFIX=/usr/local
-INCLUDEDIR=$(PREFIX)/include/miniconf
-LIBDIR=$(PREFIX)/lib
-LIBNAME=libminiconf.so
+prefix=/usr/local
+includedir=$(prefix)/include/miniconf
+exec_prefix=$(prefix)
+libdir=$(exec_prefix)/lib
+bindir=$(exec_prefix)/bin
+
 CC=cc
-FORT=f95
+FC=f95
 
-all: $(LIBNAME) libminiconf.a
+all: libminiconf.so libminiconf.a
 
 
-$(LIBNAME): miniconf.o miniconf.mod
-	$(CC) -shared miniconf.o -o $(LIBNAME)
+libminiconf.so: miniconf.o miniconf.mod
+	$(CC) -shared miniconf.o -o libminiconf.so
 
 libminiconf.a: miniconf.o miniconf.mod
 	ar rcs $@ miniconf.o
 
 miniconf.o: miniconf.c
-	$(CC) -O2 -fPIC  -c $<
+	$(CC) -O2 -g -fPIC  -c $<
 
 miniconf.mod: miniconf_fort.f90
-	$(FORT) -O2  -fPIC  -c $<
+	$(FC) -O2 -g  -fPIC  -c $<
 
 clean:
 	rm -f *.o
 
-erase: clean
+distclean: clean
 	rm -f *.mod *.a *.so.* *.dll
 
+installdirs: $(DESTDIR)$(includedir) $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
+	install -dvZ $(DESTDIR)$(includedir)
+	install -dvZ $(DESTDIR)$(libdir)
+	install -dvZ $(DESTDIR)$(libdir)/pkgconfig
 
-
-install: $(LIBNAME) libminiconf.a
-	install -dvZ $(INCLUDEDIR)
-	install -pvZ miniconf.h $(INCLUDEDIR)
-	install -pvZ miniconf.mod $(INCLUDEDIR)
-	install -pvZ miniconf_fort.f90 $(INCLUDEDIR)
-
-	install -dvZ $(LIBDIR)
-	install -pvZ $(LIBNAME) $(LIBDIR)
-	install -pvZ libminiconf.a $(LIBDIR)
-
-	install -dvZ $(LIBDIR)/pkgconfig
-	install -pvZ miniconf.pc $(LIBDIR)/pkgconfig
+install: installdirs libminiconf.so libminiconf.a
+	install -pvZ miniconf.h $(DESTDIR)$(includedir)
+	install -pvZ miniconf.mod $(DESTDIR)$(includedir)
+	install -pvZ libminiconf.so $(DESTDIR)$(libdir)
+	install -pvZ libminiconf.a $(DESTDIR)$(libdir)
+	install -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

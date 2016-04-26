@@ -7,4 +7,3 @@ Description: A minimalistic utility for reading configuration files with Fortran
 Version: 1.0
 Libs: -L${libdir} -lminiconf
 Cflags: -I${includedir}
-Static: libminiconf.a

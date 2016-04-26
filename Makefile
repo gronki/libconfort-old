@@ -4,14 +4,15 @@ includedir=$(prefix)/include/miniconf
 exec_prefix=$(prefix)
 libdir=$(exec_prefix)/lib
 bindir=$(exec_prefix)/bin
+release=1
 
 CC=cc
 FC=f95
 
-all: libminiconf.so libminiconf.a
+all: libminiconf.so.$(release) libminiconf.a
 
 
-libminiconf.so: miniconf.o miniconf.mod
+libminiconf.so.$(release): miniconf.o miniconf.mod
 	$(CC) -shared miniconf.o -o libminiconf.so
 
 libminiconf.a: miniconf.o miniconf.mod
@@ -34,9 +35,10 @@ installdirs: $(DESTDIR)$(includedir) $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkg
 	install -dvZ $(DESTDIR)$(libdir)
 	install -dvZ $(DESTDIR)$(libdir)/pkgconfig
 
-install: installdirs libminiconf.so libminiconf.a
+install: installdirs libminiconf.so.$(release) libminiconf.a
 	install -pvZ miniconf.h $(DESTDIR)$(includedir)
 	install -pvZ miniconf.mod $(DESTDIR)$(includedir)
-	install -pvZ libminiconf.so $(DESTDIR)$(libdir)
+	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
+	ln -srf $(DESTDIR)$(libdir)/libminiconf.so.$(release) $(DESTDIR)$(libdir)/libminiconf.so
 	install -pvZ libminiconf.a $(DESTDIR)$(libdir)
 	install -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

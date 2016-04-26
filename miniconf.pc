@@ -1,9 +1,10 @@
-prefix=/usr/local
+prefix=/usr
 libdir=${prefix}/lib
-includedir=${prefix}/include
+includedir=${prefix}/include/miniconf
 
 Name: miniconf
 Description: A minimalistic utility for reading configuration files with Fortran 90 port.
-Version: 1.0.0
+Version: 1.0
 Libs: -L${libdir} -lminiconf
-Cflags: -I${includedir}/miniconf
+Cflags: -I${includedir}
+Static: libminiconf.a

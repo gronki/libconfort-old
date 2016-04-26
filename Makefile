@@ -6,8 +6,8 @@ libdir=$(exec_prefix)/lib
 bindir=$(exec_prefix)/bin
 release=1
 
-CC=cc
-FC=f95
+CFLAGS=-O2 -g -Wall
+FFLAGS=-O2 -g -Wall
 
 all: libminiconf.so.$(release) libminiconf.a miniconf.mod
 
@@ -19,10 +19,10 @@ libminiconf.a: miniconf.o
 	ar rcs $@ $^
 
 miniconf.o: miniconf.c
-	$(CC) -O2 -g -fPIC  -c $<
+	cc $(CFLAGS) -fPIC  -c $<
 
 miniconf.mod: miniconf_fort.f90
-	$(FC) -O2 -g  -fPIC  -c $<
+	f95 $(FFLAGS) -c $<
 
 clean:
 	rm -f *.o
@@ -42,6 +42,5 @@ install: installdirs libminiconf.so.$(release) libminiconf.a
 	install -pvZ miniconf.h $(DESTDIR)$(includedir)
 	install -pvZ miniconf.mod $(DESTDIR)$(includedir)
 	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
-	# ln -srf $(DESTDIR)$(libdir)/libminiconf.so.$(release) $(DESTDIR)$(libdir)/libminiconf.so
 	install -pvZ libminiconf.a $(DESTDIR)$(libdir)
 	install -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

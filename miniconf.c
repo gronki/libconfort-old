@@ -36,7 +36,7 @@ miniconf* mincf_read(FILE* in) {
     int comment = 0;
     int hold = 0;
     int exitloop = 0;
-    int t,i;
+    int i;
     char* tmp;
 
     miniconf* conf;

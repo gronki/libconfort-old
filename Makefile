@@ -9,14 +9,14 @@ release=1
 CC=cc
 FC=f95
 
-all: libminiconf.so.$(release) libminiconf.a
+all: libminiconf.so.$(release) libminiconf.a miniconf.mod
 
 
-libminiconf.so.$(release): miniconf.o miniconf.mod
-	$(CC) -shared miniconf.o -o libminiconf.so
+libminiconf.so.$(release): miniconf.o
+	$(CC) -shared $^ -o $@
 
-libminiconf.a: miniconf.o miniconf.mod
-	ar rcs $@ miniconf.o
+libminiconf.a: miniconf.o
+	ar rcs $@ $^
 
 miniconf.o: miniconf.c
 	$(CC) -O2 -g -fPIC  -c $<
@@ -30,7 +30,7 @@ clean:
 distclean: clean
 	rm -f *.mod *.a *.so.* *.dll
 
-installdirs: 
+installdirs:
 	install -dvZ $(DESTDIR)$(includedir)
 	install -dvZ $(DESTDIR)$(libdir)
 	install -dvZ $(DESTDIR)$(libdir)/pkgconfig

@@ -1,6 +1,6 @@
 
 prefix=/usr/local
-includedir=$(prefix)/include/miniconf
+includedir=$(prefix)/include
 exec_prefix=$(prefix)
 libdir=$(exec_prefix)/lib
 bindir=$(exec_prefix)/bin

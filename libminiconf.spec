@@ -4,8 +4,8 @@ Release:        1%{?dist}
 Summary:        Mini Config
 
 License:        GPL v2
-URL:            https://github.com/gronki/miniconf
-Source0:        https://github.com/gronki/libminiconf/archive/master.zip
+URL:            https://github.com/gronki/libminiconf
+Source0:        https://github.com/gronki/libminiconf/archive/master.tar.gz
 
 BuildRequires:  gcc gcc-gfortran
 Requires:       gcc gcc-gfortran

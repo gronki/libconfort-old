@@ -45,7 +45,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/*.so.*
 
 %files devel
-%{_includedir}/*
+%{_includedir}/miniconf/*
 %{_libdir}/*.so.*
 %{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc

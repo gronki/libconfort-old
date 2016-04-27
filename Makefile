@@ -31,13 +31,13 @@ distclean: clean
 	rm -f *.mod *.a *.so.* *.dll
 
 installdirs:
-	install -dvZ $(DESTDIR)$(includedir)
+	install -dvZ $(DESTDIR)$(includedir)/miniconf
 	install -dvZ $(DESTDIR)$(libdir)
 	install -dvZ $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
-	install -m 644 -pvZ miniconf.h $(DESTDIR)$(includedir)
-	install -m 644 -pvZ miniconf.mod $(DESTDIR)$(includedir)
+	install -m 644 -pvZ miniconf.h $(DESTDIR)$(includedir)/miniconf
+	install -m 644 -pvZ miniconf.mod $(DESTDIR)$(includedir)/miniconf
 	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
 	install -m 644 -pvZ libminiconf.a $(DESTDIR)$(libdir)
 	install -m 644 -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

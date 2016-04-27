@@ -1,4 +1,5 @@
 Name: miniconf
 Description: A minimalistic utility for reading configuration files with Fortran 90 port.
-Version: 604.27
+Version: 604.28
 Libs: -lminiconf
+Cflags: -I/usr/include

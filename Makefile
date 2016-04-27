@@ -22,7 +22,7 @@ miniconf.o: miniconf.c
 	cc $(CFLAGS) -fPIC  -c $<
 
 miniconf.mod: miniconf_fort.f90
-	f95 $(FFLAGS) -c $<
+	f95 $(FFLAGS) -fPIC -c $<
 
 clean:
 	rm -f *.o
@@ -35,12 +35,9 @@ installdirs:
 	install -dvZ $(DESTDIR)$(libdir)
 	install -dvZ $(DESTDIR)$(libdir)/pkgconfig
 
-$(DESTDIR)$(includedir) $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig:
-	install -dvZ $@
-
-install: installdirs libminiconf.so.$(release) libminiconf.a
-	install -pvZ miniconf.h $(DESTDIR)$(includedir)
-	install -pvZ miniconf.mod $(DESTDIR)$(includedir)
+install: installdirs all
+	install -m 644 -pvZ miniconf.h $(DESTDIR)$(includedir)
+	install -m 644 -pvZ miniconf.mod $(DESTDIR)$(includedir)
 	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
-	install -pvZ libminiconf.a $(DESTDIR)$(libdir)
-	install -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig
+	install -m 644 -pvZ libminiconf.a $(DESTDIR)$(libdir)
+	install -m 644 -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

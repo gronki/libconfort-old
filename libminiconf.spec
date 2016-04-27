@@ -1,5 +1,5 @@
 Name:           libminiconf
-Version:        1.0.0
+Version:        604.27
 Release:        1%{?dist}
 Summary:        Mini Config
 
@@ -27,14 +27,12 @@ developing applications that use %{name}.
 
 
 %build
-make %{?_smp_mflags} prefix="/usr" bindir="%{_bindir}" \
-    libdir="%{_libdir}" bindir="%{_bindir}"  includedir="%{_includedir}"
+make %{?_smp_mflags} prefix="/usr" bindir="%{_bindir}"  libdir="%{_libdir}"  includedir="%{_includedir}"
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install prefix="/usr" bindir="%{_bindir}" \
-    libdir="%{_libdir}" bindir="%{_bindir}"  includedir="%{_includedir}"
+%make_install prefix="/usr" bindir="%{_bindir}"  libdir="%{_libdir}"  includedir="%{_includedir}"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 %post

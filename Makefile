@@ -13,7 +13,7 @@ all: libminiconf.so.$(release) libminiconf.a miniconf.mod
 
 
 libminiconf.so.$(release): miniconf.o
-	$(CC) -shared $^ -o $@
+	cc -shared $^ -o $@
 
 libminiconf.a: miniconf.o
 	ar rcs $@ $^

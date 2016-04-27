@@ -4,6 +4,6 @@ includedir=${prefix}/include/miniconf
 
 Name: miniconf
 Description: A minimalistic utility for reading configuration files with Fortran 90 port.
-Version: 1.0
+Version: 604.27
 Libs: -L${libdir} -lminiconf
 Cflags: -I${includedir}

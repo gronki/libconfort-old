@@ -54,6 +54,9 @@ miniconf* mincf_read(FILE* in) {
     strcpy(none_synonyms[1],"None");
     strcpy(none_synonyms[2],"NULL");
 
+    // if file handle is null, exit
+    if (!in)  return NULL;
+
 
     // alloc the structure
     conf = (miniconf*) malloc(sizeof(miniconf));

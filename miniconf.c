@@ -28,6 +28,8 @@
 
 #include "miniconf.h"
 
+const size_t mincf_bufsz = 2048;
+
 miniconf* mincf_read(FILE* in) {
 
     char ch;

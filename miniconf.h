@@ -41,7 +41,6 @@ typedef int MINCF_TYPE;
 #define MINCF_FLOAT 2
 #define MINCF_DOUBLE 3
 #define MINCF_FLOAT64 3
-const size_t mincf_bufsz = 2048;
 
 typedef struct {
     int k0; int kn;

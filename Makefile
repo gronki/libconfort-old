@@ -4,25 +4,51 @@ includedir=$(prefix)/include
 exec_prefix=$(prefix)
 libdir=$(exec_prefix)/lib
 bindir=$(exec_prefix)/bin
-release=1
+release=2
 
-CFLAGS=-O2 -g -Wall
-FFLAGS=-O2 -g -Wall
+CC := gcc
+FC := gfortran
 
-all: libminiconf.so.$(release) libminiconf.a miniconf.mod
+OFLAGS = -O2
+MFLAGS =
+CFLAGS = $(MFLAGS) $(OFLAGS)
+FCFLAGS = $(MFLAGS) $(OFLAGS)
+CFLAGS += -g
+CFLAGS += -std=c99
+FCFLAGS += -g
+FCFLAGS += -cpp
+
+ifeq ($(FC),gfortran)
+FCFLAGS += -Wall -std=f2008 -fimplicit-none
+FCFLAGS += -fbacktrace
+endif
+ifeq ($(CC),gcc)
+CFLAGS += -Wall
+endif
+ifeq ($(FC),ifort)
+FCFLAGS += -traceback
+endif
+ifeq ($(CC),icc)
+CFLAGS += -traceback
+endif
+
+################################################
 
 
-libminiconf.so.$(release): miniconf.o
-	cc -shared $^ -o $@
+build: libminiconf.so.$(release) libminiconf.a
 
-libminiconf.a: miniconf.o
+
+libminiconf.so.$(release): miniconf.o miniconf_fort.o
+	$(FC) $(FCFLAGS) -shared $^ -o $@
+
+libminiconf.a: miniconf.o miniconf_fort.o
 	ar rcs $@ $^
 
 miniconf.o: miniconf.c
-	cc $(CFLAGS) -fPIC  -c $<
+	$(CC) $(CFLAGS) -fPIC  -c $<
 
-miniconf.mod: miniconf_fort.f90
-	f95 $(FFLAGS) -fPIC -c $<
+miniconf_fort.o: miniconf_fort.f90
+	$(FC) $(FCFLAGS) -fPIC -c $<
 
 clean:
 	rm -f *.o

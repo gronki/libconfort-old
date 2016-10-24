@@ -26,82 +26,94 @@ module miniconf
 
     use iso_c_binding
 
-    implicit none
+    type :: mini_conf
+        type(c_ptr) :: r
+    end type
 
-    !> Value indicating that key has not been found.
-    integer, parameter :: MINCF_NOT_FOUND = -1
+    type, bind(C) :: miniconf_c
+        type(c_ptr) :: buffer
+        integer(c_size_t) ::  buffer_sz
+        integer(c_size_t) :: n_records
+        integer(c_size_t) :: records_sz
+        type(c_ptr) :: records
+    end type
 
-    ! type MINCF_CONF
-    !     type(c_ptr) :: r
-    ! end type
+    integer, parameter :: MINCF_OK =                0
+    integer, parameter :: MINCF_ERROR =             1
+    integer, parameter :: MINCF_ARGUMENT_ERROR =    ishft(1,1)
+    integer, parameter :: MINCF_MEMORY_ERROR =      ishft(1,2)
+    integer, parameter :: MINCF_FILE_NOT_FOUND =    ishft(1,3)
+    integer, parameter :: MINCF_SYNTAX_ERROR =      ishft(1,4)
+    integer, parameter :: MINCF_NOT_FOUND =         ishft(1,5)
+
+
 
     interface
-        !>  Reads the configuration from file.
-        !!  @param fn String containing the filename.
-        !! @return  Pointer to miniconf structure, containing the configuration or
-        !! C_NULL_PTR in case of failure.
-        !! @see mincf_free
-        subroutine mincf_readf(cfg,fn)
-            import
-            character (len=*), intent(in) :: fn
-            type(c_ptr), intent(out) :: cfg
+
+        subroutine mincf_read_file(cfg,file,errno) &
+                & bind(C,name='fort_mincf_read_file')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            character(kind=c_char, len=1), intent(in) :: file(*)
+            integer(c_int), intent(out) :: errno
         end subroutine
 
-        !> Reads the configuration information from standard input. Particularly
-        !! useful when creating bash scripts since the configuration can be derived
-        !! to program directly using pipe.
-        !! @return  Pointer to miniconf structure, containing the configuration or
-        !! C_NULL_PTR in case of failure.
-        !! @see mincf_free
-        subroutine mincf_read(cfg)
-            import
-            type(c_ptr), intent(out) :: cfg
+        subroutine mincf_read_stdin(cfg,errno) &
+                & bind(C,name='fort_mincf_read_stdin')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            integer(c_int), intent(out) :: errno
         end subroutine
 
-        !> Gets the value of key "key" from config "conf".
-        !! @param conf    Pointer to miniconf structure, created ith mincf_read or mincf_readf.
-        !! @param key   String containing the key
-        !! @param buf   Destination buffer
-        !! @return  Length of value, 0 if empty or MINCF_NOT_FOUND if not found.
-        function mincf_get_req(conf,key,buf) result(r)
-            import
-            character (len=*), intent(in) :: key
-            character (len=*), intent(out) :: buf
-            type(c_ptr),intent(in),value :: conf
-            integer :: r
-        end function
+
 
         !> Deallocates the memory reserved for config.
         !! WARNING: without this you get a memory leak!
-        !! @param conf    Pointer to miniconf structure, created ith mincf_read or mincf_readf.
-        !! @see mincf_read
-        !! @see mincf_readf
-        subroutine mincf_free(conf)
-            import
-            type(c_ptr),intent(in),value :: conf
+        !! @param conf    Pointer to miniconf structure.
+        subroutine mincf_free(cfg) &
+                & bind(C,name='mincf_free')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
         end subroutine
-    end interface
 
-    interface mincf_get
-        !> Gets the value of key "key" from config "conf".
-        !! @param conf    Pointer to miniconf structure, created ith mincf_read or mincf_readf.
-        !! @param key   String containing the key
-        !! @param buf   Destination buffer
-        !! @return  Length of value, 0 if empty or MINCF_NOT_FOUND if not found.
-        function mincf_get_0(conf,key,buf) result(r)
-            import
-            character (len=*), intent(in) :: key
-            character (len=*), intent(out) :: buf
-            type(c_ptr),intent(in),value :: conf
-            integer :: r
+
+        function c_strlen(s) &
+            & result(length) &
+            & bind(C,name='strlen')
+            use iso_c_binding
+            character(c_char), intent(in) :: s(*)
+            integer(c_size_t) :: length
         end function
-        function mincf_get_def(conf,key,defval,buf) result(r)
-            import
-            character (len=*), intent(in) :: key,defval
-            character (len=*), intent(out) :: buf
-            type(c_ptr),intent(in),value :: conf
-            integer :: r
-        end function
+        subroutine mincf_get(cfg,key,buf,sz,errno) &
+                & bind(C,name='fort_mincf_get')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            character(kind=c_char, len=1), intent(in) :: key(*)
+            integer(c_size_t), intent(in), value :: sz
+            character(kind=c_char), intent(inout) :: buf(*)
+            integer(c_int), intent(out) :: errno
+        end subroutine
+        subroutine mincf_get_default(cfg,key,buf,sz,defvalue,errno) &
+                & bind(C,name='fort_mincf_get_default')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            character(kind=c_char, len=1), intent(in) :: key(*), defvalue(*)
+            integer(c_size_t), intent(in), value :: sz
+            character(kind=c_char), intent(inout) :: buf(*)
+            integer(c_int), intent(out) :: errno
+        end subroutine
+        subroutine cstr_import(buf,sz) &
+                & bind(C,name='cstr_import')
+            use iso_c_binding
+            character(kind=c_char), intent(inout) :: buf(*)
+            integer(c_size_t), intent(in), value :: sz
+        end subroutine
+
     end interface
 
 end module

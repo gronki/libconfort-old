@@ -1,5 +1,5 @@
 Name:           libminiconf
-Version:        604.28
+Version:        4.22
 Release:        1%{?dist}
 Summary:        Mini Config
 

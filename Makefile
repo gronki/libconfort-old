@@ -9,46 +9,45 @@ release=2
 CC := gcc
 FC := gfortran
 
-OFLAGS = -O2
-MFLAGS =
-CFLAGS = $(MFLAGS) $(OFLAGS)
-FCFLAGS = $(MFLAGS) $(OFLAGS)
-CFLAGS += -g
-CFLAGS += -std=c99
-FCFLAGS += -g
-FCFLAGS += -cpp
+CFLAGS = -O2 -g
+FCFLAGS = -O2 -g
+
+override ALL_CFLAGS = $(INCL)
+override ALL_FCFLAGS = $(INCL) -cpp
 
 ifeq ($(FC),gfortran)
-FCFLAGS += -Wall -std=f2008 -fimplicit-none
+override ALL_FCFLAGS += -Wall -std=f2008 -fimplicit-none
 FCFLAGS += -fbacktrace
 endif
 ifeq ($(CC),gcc)
-CFLAGS += -Wall
+override ALL_CFLAGS += -Wall
 endif
 ifeq ($(FC),ifort)
-FCFLAGS += -traceback
+override ALL_FCFLAGS += -warn all -implicitnone
+FCFLAGS += -traceback -xHost
 endif
 ifeq ($(CC),icc)
-CFLAGS += -traceback
+CFLAGS += -traceback -xHost
 endif
 
-################################################
+override ALL_CFLAGS += $(CFLAGS)
+override ALL_FCFLAGS += $(FCFLAGS)
 
 
-build: libminiconf.so.$(release) libminiconf.a
+all: libminiconf.so.$(release) libminiconf.a
 
 
 libminiconf.so.$(release): miniconf.o miniconf_fort.o
-	$(FC) $(FCFLAGS) -shared $^ -o $@
+	$(FC) $(ALL_FCFLAGS) -shared $^ -o $@
 
 libminiconf.a: miniconf.o miniconf_fort.o
 	ar rcs $@ $^
 
 miniconf.o: miniconf.c
-	$(CC) $(CFLAGS) -fPIC  -c $<
+	$(CC) $(ALL_CFLAGS) -fPIC  -c $<
 
 miniconf_fort.o: miniconf_fort.f90
-	$(FC) $(FCFLAGS) -fPIC -c $<
+	$(FC) $(ALL_FCFLAGS) -fPIC -c $<
 
 clean:
 	rm -f *.o

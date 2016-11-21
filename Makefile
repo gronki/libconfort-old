@@ -4,7 +4,6 @@ includedir=$(prefix)/include
 exec_prefix=$(prefix)
 libdir=$(exec_prefix)/lib
 bindir=$(exec_prefix)/bin
-release=2
 
 CC := gcc
 FC := gfortran
@@ -34,10 +33,10 @@ override ALL_CFLAGS += $(CFLAGS)
 override ALL_FCFLAGS += $(FCFLAGS)
 
 
-all: libminiconf.so.$(release) libminiconf.a
+all: libminiconf.so libminiconf.a
 
 
-libminiconf.so.$(release): miniconf.o miniconf_fort.o
+libminiconf.so: miniconf.o miniconf_fort.o
 	$(FC) $(ALL_FCFLAGS) -shared $^ -o $@
 
 libminiconf.a: miniconf.o miniconf_fort.o
@@ -56,13 +55,13 @@ distclean: clean
 	rm -f *.mod *.a *.so.* *.dll
 
 installdirs:
-	install -dvZ $(DESTDIR)$(includedir)/miniconf
-	install -dvZ $(DESTDIR)$(libdir)
-	install -dvZ $(DESTDIR)$(libdir)/pkgconfig
+	install -d $(DESTDIR)$(includedir)/miniconf
+	install -d $(DESTDIR)$(libdir)
+	install -d $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
-	install -m 644 -pvZ miniconf.h $(DESTDIR)$(includedir)/miniconf
-	install -m 644 -pvZ miniconf.mod $(DESTDIR)$(includedir)/miniconf
-	install -pvZ libminiconf.so.$(release) $(DESTDIR)$(libdir)
-	install -m 644 -pvZ libminiconf.a $(DESTDIR)$(libdir)
-	install -m 644 -pvZ miniconf.pc $(DESTDIR)$(libdir)/pkgconfig
+	install -m 644 -p miniconf.h $(DESTDIR)$(includedir)/miniconf
+	install -m 644 -p miniconf.mod $(DESTDIR)$(includedir)/miniconf
+	install -p libminiconf.so $(DESTDIR)$(libdir)
+	install -m 644 -p libminiconf.a $(DESTDIR)$(libdir)
+	install -m 644 -p miniconf.pc $(DESTDIR)$(libdir)/pkgconfig

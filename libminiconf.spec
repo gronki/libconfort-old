@@ -1,17 +1,17 @@
 Name:           libminiconf
-Version:        4.22
+Version:        %{_version}
 Release:        1%{?dist}
 Summary:        Mini Config
 
-License:        GPL v2
-URL:            https://github.com/gronki/libminiconf
-Source0:        https://github.com/gronki/libminiconf/archive/master.tar.gz
+License:        MIT
+URL:            http://github.com/gronki/libminiconf
+Source:         libminiconf-%{version}.tar.xz
 
 BuildRequires:  gcc gcc-gfortran
 Requires:       gcc gcc-gfortran
 
 %description
-Minimalistic config utility with Fortran bindings.
+A minimalistic utility for reading configuration files. Easy to use Fortran 2008 bindings are included. Compatible with GCC and Intel compilers. (This packages is built for GCC.)
 
 %package        devel
 Summary:        Development files for %{name}
@@ -21,18 +21,23 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-
 %prep
-%autosetup -n libminiconf-master
-
+%autosetup -n libminiconf
 
 %build
-make %{?_smp_mflags} prefix="/usr" bindir="%{_bindir}"  libdir="%{_libdir}"  includedir="%{_includedir}"
-
+make DESTDIR=$RPM_BUILD_ROOT \
+        prefix="/usr" \
+        bindir="%{_bindir}"  \
+        libdir="%{_libdir}"  \
+        includedir="%{_includedir}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install prefix="/usr" bindir="%{_bindir}"  libdir="%{_libdir}"  includedir="%{_includedir}"
+make install DESTDIR=$RPM_BUILD_ROOT \
+        prefix="/usr" \
+        bindir="%{_bindir}"  \
+        libdir="%{_libdir}"  \
+        includedir="%{_includedir}"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 %post
@@ -42,15 +47,10 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 /sbin/ldconfig
 
 %files
-%{_libdir}/*.so.*
+%{_libdir}/*.so
 
 %files devel
 %{_includedir}/miniconf/*
-%{_libdir}/*.so.*
+#%{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc
-
-
-%changelog
-* Tue Apr 26 2016 Dominik Gronkiewicz
-- created RPM package

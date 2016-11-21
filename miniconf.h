@@ -68,6 +68,4 @@ int mincf_read(miniconf *cfg, char *fn);
 int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
 void mincf_free(miniconf *cfg);
 
-void fort_mincf_read(miniconf *cfg, char *fn, int *error);
-
 #endif

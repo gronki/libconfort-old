@@ -36,6 +36,8 @@ const int MINCF_FILE_NOT_FOUND =    (1<<3);
 const int MINCF_SYNTAX_ERROR =      (1<<4);
 const int MINCF_NOT_FOUND =         (1<<5);
 
+void cstr_fix(char* buf, size_t sz);
+
 int mincf_parse_stream(miniconf *cfg, FILE *in) {
 
     char ch;
@@ -240,7 +242,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
 /*** mincf_read ***
  * @param cfg      Reference to miniconf structure
  * @param fn       Filename. If NULL, stdin will be used.
- * @returns         Success (nonzero) or error (0)
+ * @returns         Success (zero) or error (nonzero)
  */
 int mincf_read(miniconf *cfg, char *fn) {
     FILE *f;
@@ -270,7 +272,7 @@ int mincf_read(miniconf *cfg, char *fn) {
  * @param defvalue  Default value if entry is not found
  *                  if NULL, error value will be returned
  *                  error value will be returned.
- * @returns         Success (nonzero) or error (0)
+ * @returns         Success (zero) or error (nonzero)
  */
 int mincf_get(miniconf *cfg, char *key,
         char *buf, size_t sz,
@@ -296,14 +298,12 @@ int mincf_get(miniconf *cfg, char *key,
                 n = (rec->vn < sz-1) ? rec->vn : sz-1;
                 strncpy(buf, &(cfg->buffer[rec->v0]), n);
             }
-            // return length of output increased by one
             return MINCF_OK;
         }
     }
     // if no key was found but default value was given, use it
     if (buf && defvalue) {
         strncpy(buf,defvalue,sz);
-        // return length of output increased by one
         return MINCF_OK;
     }
     // nothing found and no default
@@ -319,54 +319,28 @@ void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno) {
 }
 void fort_mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, int* errno) {
     *errno = mincf_get(cfg,key,buf,sz,NULL);
+    if ( *errno == 0 ) cstr_fix(buf,sz);
 }
 void fort_mincf_get_default(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue, int* errno) {
     *errno = mincf_get(cfg,key,buf,sz,defvalue);
+    if ( *errno == 0 ) cstr_fix(buf,sz);
 }
 
-void cstr_import(char *str, int sz) {
-    size_t i = 0;
-    int tail = 0;
+// This converts C string to Fortran whitespace-filled string
+void cstr_fix(char* buf, size_t sz) {
+    size_t i;
+    register int dup = 0;
     for (i = 0; i < sz; i++) {
-        if (!tail) {
-            if (!str[i]) {
-                tail = 1;
-                str[i] = ' ';
-            }
-        } else {
-            str[i] = ' ';
-        }
+        dup = dup || (buf[i] < 0x20);
+        if ( dup ) buf[i] = ' ';
     }
 }
-//
-// void cstr_export_(char *str, int sz) {
-//
-// }
-
-//
-// void cstrexport(char* src, size_t src_sz, char* dest, size_t dest_sz) {
-//     fstrimport(src,src_sz,dest,dest_sz);
-// }
-//
-// void cstrimport(char* src, char* dest, size_t dest_sz) {
-//     fstrexport(src,dest,dest_sz);
-// }
-//
-// void * fstrimport(char* src, size_t src_sz, char* dest, size_t dest_sz) {
-//     memset(dest,0,dest_sz);
-//     return memcpy(dest,src, (src_sz<(dest_sz-1) ? src_sz : (dest_sz-1)) );
-// }
-//
-// void * fstrexport(char* src, char* dest, size_t dest_sz) {
-//     size_t src_sz = strlen(src);
-//     memset(dest,' ',dest_sz);
-//     return memcpy(dest,src, (src_sz<dest_sz ? src_sz : dest_sz) );
-// }
 
 /*** mincf_free ***
  * @param cfg       Reference to miniconf structure
  */
 void mincf_free(miniconf *cfg) {
+    if ( !cfg ) return;
     if ( cfg -> buffer != NULL ) {
         free(cfg -> buffer);
         cfg -> buffer = NULL;

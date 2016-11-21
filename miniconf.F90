@@ -26,7 +26,7 @@ module miniconf
 
     use iso_c_binding
 
-    type :: mini_conf
+    type :: miniconf_t
         type(c_ptr) :: r
     end type
 
@@ -55,7 +55,7 @@ module miniconf
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char, len=1), intent(in) :: file(*)
+            character(kind=c_char), intent(in) :: file(*)
             integer(c_int), intent(out) :: errno
         end subroutine
 
@@ -67,18 +67,12 @@ module miniconf
             integer(c_int), intent(out) :: errno
         end subroutine
 
-
-
-        !> Deallocates the memory reserved for config.
-        !! WARNING: without this you get a memory leak!
-        !! @param conf    Pointer to miniconf structure.
         subroutine mincf_free(cfg) &
                 & bind(C,name='mincf_free')
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
         end subroutine
-
 
         function c_strlen(s) &
             & result(length) &
@@ -87,31 +81,27 @@ module miniconf
             character(c_char), intent(in) :: s(*)
             integer(c_size_t) :: length
         end function
+
         subroutine mincf_get(cfg,key,buf,sz,errno) &
                 & bind(C,name='fort_mincf_get')
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char, len=1), intent(in) :: key(*)
+            character(kind=c_char), intent(in) :: key(*)
             integer(c_size_t), intent(in), value :: sz
             character(kind=c_char), intent(inout) :: buf(*)
             integer(c_int), intent(out) :: errno
         end subroutine
+
         subroutine mincf_get_default(cfg,key,buf,sz,defvalue,errno) &
                 & bind(C,name='fort_mincf_get_default')
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char, len=1), intent(in) :: key(*), defvalue(*)
+            character(kind=c_char), intent(in) :: key(*), defvalue(*)
             integer(c_size_t), intent(in), value :: sz
             character(kind=c_char), intent(inout) :: buf(*)
             integer(c_int), intent(out) :: errno
-        end subroutine
-        subroutine cstr_import(buf,sz) &
-                & bind(C,name='cstr_import')
-            use iso_c_binding
-            character(kind=c_char), intent(inout) :: buf(*)
-            integer(c_size_t), intent(in), value :: sz
         end subroutine
 
     end interface

@@ -111,8 +111,6 @@ contains
                 exit try
             end if
 
-            call cstr_import(buf, len(buf,kind=c_size_t))
-
             if ( buf .ne. "value1" ) &
                 & failure = 1
 

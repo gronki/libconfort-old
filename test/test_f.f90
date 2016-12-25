@@ -90,8 +90,7 @@ contains
         failure = 0
 
         call mincf_read_file(cfg, &
-                & "test.cfg" // char(0), &
-                & errno)
+                & "test.cfg" // char(0), errno)
 
         if (errno .ne. MINCF_OK) then
             failure = 1
@@ -102,8 +101,7 @@ contains
 
             character(len=150) :: buf
 
-            call mincf_get(cfg, &
-                    & "key1" // char(0), &
+            call mincf_get(cfg, "key1" // char(0), &
                     & buf, len(buf,kind=c_size_t), errno)
 
             if ( errno .ne. MINCF_OK ) then

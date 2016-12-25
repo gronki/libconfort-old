@@ -46,8 +46,6 @@ module miniconf
     integer, parameter :: MINCF_SYNTAX_ERROR =      ishft(1,4)
     integer, parameter :: MINCF_NOT_FOUND =         ishft(1,5)
 
-
-
     interface
 
         subroutine mincf_read_file(cfg,file,errno) &
@@ -67,6 +65,28 @@ module miniconf
             integer(c_int), intent(out) :: errno
         end subroutine
 
+        subroutine mincf_get(cfg,key,buf,sz,errno) &
+                & bind(C,name='fort_mincf_get')
+            use iso_c_binding
+            import miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            character(kind=c_char), intent(in) :: key(*)
+            integer(c_size_t), intent(in), value :: sz
+            character(kind=c_char), intent(inout) :: buf(sz)
+            integer(c_int), intent(out) :: errno
+        end subroutine
+
+        subroutine mincf_get_default(cfg,key,buf,sz,defvalue,errno) &
+                & bind(C,name='fort_mincf_get_default')
+            use iso_c_binding
+            import miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            character(kind=c_char), intent(in) :: key(*), defvalue(*)
+            integer(c_size_t), intent(in), value :: sz
+            character(kind=c_char), intent(inout) :: buf(sz)
+            integer(c_int), intent(out) :: errno
+        end subroutine
+
         subroutine mincf_free(cfg) &
                 & bind(C,name='mincf_free')
             use iso_c_binding
@@ -81,28 +101,6 @@ module miniconf
             character(c_char), intent(in) :: s(*)
             integer(c_size_t) :: length
         end function
-
-        subroutine mincf_get(cfg,key,buf,sz,errno) &
-                & bind(C,name='fort_mincf_get')
-            use iso_c_binding
-            import :: miniconf_c
-            type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char), intent(in) :: key(*)
-            integer(c_size_t), intent(in), value :: sz
-            character(kind=c_char), intent(inout) :: buf(*)
-            integer(c_int), intent(out) :: errno
-        end subroutine
-
-        subroutine mincf_get_default(cfg,key,buf,sz,defvalue,errno) &
-                & bind(C,name='fort_mincf_get_default')
-            use iso_c_binding
-            import :: miniconf_c
-            type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char), intent(in) :: key(*), defvalue(*)
-            integer(c_size_t), intent(in), value :: sz
-            character(kind=c_char), intent(inout) :: buf(*)
-            integer(c_int), intent(out) :: errno
-        end subroutine
 
     end interface
 

@@ -1,3 +1,27 @@
+
+/*************** M I N I C O N F ***************/
+/*  This small library allows to read a simple
+    configuration file. Data can be read from
+    any FILE* handle (for example stdin).
+    Dominik Gronkiewicz 2016  gronki@gmail.com
+    MIT license.
+
+    Example file:
+    --------------------------
+    key1 value1
+
+    # comment
+    key2 value2 value3   #  another comment
+
+    key3 "very long # text
+    with newline"
+
+    key4   5.0
+    key5   6.0  7.5  # hoorayy it's the end
+    --------------------------
+
+************************************************/
+
 #include "miniconf.h"
 
 const int MINCF_OK =                0;

@@ -1,5 +1,5 @@
 Name:           libminiconf
-Version:        %{_version}
+Version:        161226
 Release:        1%{?dist}
 Summary:        Mini Config
 
@@ -22,7 +22,7 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %prep
-%autosetup -n libminiconf
+%autosetup
 
 %build
 make DESTDIR=$RPM_BUILD_ROOT \

@@ -1,4 +1,4 @@
-VERSION				= 161214
+VERSION				= 161226
 
 prefix 	 	 		= /usr/local
 exec_prefix	 		= $(prefix)
@@ -56,6 +56,14 @@ clean:
 
 distclean: clean
 
+dist: distclean
+	tar cvf libminiconf-$(VERSION).tar -C .. \
+			--exclude='libminiconf/.git' \
+			--exclude='libminiconf/*.tar' \
+			--transform="s/^libminiconf/libminiconf-$(VERSION)/" \
+			libminiconf
+	xz -f libminiconf-$(VERSION).tar
+
 installdirs:
 	install -d $(DESTDIR)$(includedir)/miniconf
 	install -d $(DESTDIR)$(libdir)/pkgconfig
@@ -66,24 +74,6 @@ install: installdirs all
 	install -p libminiconf.so $(DESTDIR)$(libdir)
 	install -m 644 -p libminiconf.a $(DESTDIR)$(libdir)
 	install -m 644 -p miniconf.pc $(DESTDIR)$(libdir)/pkgconfig
-
-dist: distclean
-	mkdir -p dist
-	tar cf dist/libminiconf-$(VERSION).tar ../libminiconf \
-			--exclude='.git' --exclude='.gitmodules' \
-			--exclude='libminiconf/dist' \
-			--exclude='libminiconf/rpmbuild'
-	xz -f dist/libminiconf-$(VERSION).tar
-
-rpm: dist libminiconf.spec
-	mkdir -p rpmbuild/SOURCES rpmbuild/SPECS rpmbuild/RPMS \
-				rpmbuild/SRPMS rpmbuild/BUILD
-	cp dist/libminiconf-$(VERSION).tar.xz rpmbuild/SOURCES/
-	cp libminiconf.spec rpmbuild/SPECS
-	cd rpmbuild/SPECS && rpmbuild \
-			--define "_topdir $(CURDIR)/rpmbuild" \
-			--define "_version $(VERSION)" \
-			-ba libminiconf.spec
 
 miniconf.pc:
 	echo "Name: miniconf" > miniconf.pc

@@ -4,7 +4,7 @@
     configuration file. Data can be read from
     any FILE* handle (for example stdin).
     Dominik Gronkiewicz 2016  gronki@gmail.com
-    GNU GPL 2 license.
+    MIT license.
 
     Example file:
     --------------------------
@@ -19,10 +19,7 @@
     key4   5.0
     key5   6.0  7.5  # hoorayy it's the end
     --------------------------
-    CHANGELOG:
-    25/02/16 get now searches backwards so that the last
-        duplicated entry is found
-    01/02/16 Added mincf_get_req.
+
 ************************************************/
 
 

@@ -55,6 +55,11 @@ clean:
 	rm -f *.mod *.a *.so *.dll miniconf.pc
 
 distclean: clean
+	find -name 'libminiconf-*' -type d -print0 | xargs -0 rm -rfv
+	find -name '*.log' -delete
+	find -name '*.tar.xz' -delete
+	find -name '*.rpm' -delete
+	rm -rfv i686 x86_64
 
 dist: distclean
 	tar cvf libminiconf-$(VERSION).tar -C .. \

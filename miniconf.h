@@ -60,6 +60,7 @@ typedef struct {
 
 int mincf_parse_stream(miniconf *cfg, FILE *in);
 int mincf_read(miniconf *cfg, char *fn);
+mincf_rec* mincf_record_query(miniconf *cfg, char *key);
 int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
 void mincf_free(miniconf *cfg);
 

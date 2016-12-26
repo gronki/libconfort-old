@@ -8,7 +8,7 @@ includedir 	 		= $(prefix)/include
 libdir 	 	 		= $(exec_prefix)/lib
 docdir 	 	 		= $(datadir)/doc
 
-OBJECTS	 	 		= retvals.o parser.o core.o miniconf.o
+OBJECTS	 	 		= core.o c_routines.o f_routines.o miniconf.o
 
 INCLUDE	 	 		= -I.
 
@@ -52,10 +52,9 @@ libminiconf.a: $(OBJECTS)
 clean:
 	rm -f *.o
 	$(MAKE) -C 'test' clean
+	rm -f *.mod *.a *.so *.dll miniconf.pc
 
 distclean: clean
-	rm -f *.mod *.a *.so *.dll miniconf.pc
-	$(MAKE) -C 'test' distclean
 
 installdirs:
 	install -d $(DESTDIR)$(includedir)/miniconf

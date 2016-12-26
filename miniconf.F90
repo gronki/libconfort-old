@@ -38,13 +38,13 @@ module miniconf
         type(c_ptr) :: records
     end type
 
-    integer, parameter :: MINCF_OK =                0
-    integer, parameter :: MINCF_ERROR =             1
-    integer, parameter :: MINCF_ARGUMENT_ERROR =    ishft(1,1)
-    integer, parameter :: MINCF_MEMORY_ERROR =      ishft(1,2)
-    integer, parameter :: MINCF_FILE_NOT_FOUND =    ishft(1,3)
-    integer, parameter :: MINCF_SYNTAX_ERROR =      ishft(1,4)
-    integer, parameter :: MINCF_NOT_FOUND =         ishft(1,5)
+    integer, external :: MINCF_OK
+    integer, external :: MINCF_ERROR
+    integer, external :: MINCF_ARGUMENT_ERROR
+    integer, external :: MINCF_MEMORY_ERROR
+    integer, external :: MINCF_FILE_NOT_FOUND
+    integer, external :: MINCF_SYNTAX_ERROR
+    integer, external :: MINCF_NOT_FOUND
 
     interface
 

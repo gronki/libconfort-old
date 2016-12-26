@@ -1,51 +1,53 @@
-VERSION=4.51
+VERSION				= 161214
 
-prefix=/usr/local
-includedir=$(prefix)/include
-exec_prefix=$(prefix)
-libdir=$(exec_prefix)/lib
-bindir=$(exec_prefix)/bin
+prefix 	 	 		= /usr/local
+exec_prefix	 		= $(prefix)
+bindir		 		= $(exec_prefix)/bin
+datadir	 	 		= $(prefix)/share
+includedir 	 		= $(prefix)/include
+libdir 	 	 		= $(exec_prefix)/lib
+docdir 	 	 		= $(datadir)/doc
 
-CC := gcc
-FC := gfortran
+OBJECTS	 	 		= retvals.o parser.o core.o miniconf.o
 
-override ALL_CFLAGS = -I.
-override ALL_FCFLAGS = -I.
+INCLUDE	 	 		= -I.
 
-# C compilers
-ifeq ($(CC),gcc)
-CFLAGS = -O2 -ftree-vectorize -finline-functions -funroll-loops -Wall
-endif
-ifeq ($(CC),icc)
-CFLAGS = -O2 -unroll -Wall
-endif
+CC  	 	 		?= cc
+FC 		 	 		:= $(if $(filter $(FC),f77),f95,$(FC))
 
-# Fortran compilers
-ifeq ($(FC),gfortran)
-override ALL_FCFLAGS += -std=f2008 -fimplicit-none
-FCFLAGS = -O2 -ftree-vectorize -finline-functions -funroll-loops -Wall
-endif
-ifeq ($(FC),ifort)
-override ALL_FCFLAGS += -implicitnone
-FCFLAGS = -O2 -unroll -warn all
-endif
+# GNU Fortran (gfortran/f95)
+FFLAGS_f95			:= -std=f2008 -fimplicit-none
+FFLAGS_f95_extra	:= -Wall -O2 -mieee-fp
 
-override ALL_CFLAGS += $(CFLAGS)
-override ALL_FCFLAGS += $(FCFLAGS)
+# Intel Fortran (ifort)
+FFLAGS_ifort		:= -std08 -implicitnone
+FFLAGS_ifort_extra 	:= -warn all -O2 -mieee-fp
+
+CFLAGS 	 	 		?= -Wall -O2 -mieee-fp
+FFLAGS	 	 		?= $(FFLAGS_$(FC)_extra)
+FFLAGS 		 		+= $(FFLAGS_$(FC))
+
+COMPILE.C 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -fPIC -c
+COMPILE.F    		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -fPIC -c
+LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
+LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
+LINK       			= $(LD) --build-id $(LDFLAGS)
 
 all: libminiconf.so libminiconf.a miniconf.pc
 
-libminiconf.so: miniconf.o miniconf_fort.o
-	$(FC) $(ALL_FCFLAGS) -shared $^ -o $@
+libminiconf.so: $(OBJECTS)
+	$(LINK.F) $(LDLIBS) -shared $^ -o $@
 
-libminiconf.a: miniconf.o miniconf_fort.o
+libminiconf.a: $(OBJECTS)
 	ar rcs $@ $^
 
-miniconf.o: miniconf.c
-	$(CC) $(ALL_CFLAGS) -fPIC -c -o $@ $<
+%.o: %.c
+	$(COMPILE.C) $< -o $@
 
-miniconf_fort.o: miniconf.F90
-	$(FC) $(ALL_FCFLAGS) -fPIC -c -o $@ $<
+%.o: %.F90
+	$(COMPILE.F) $< -o $@
+
+.INTERMEDIATE: $(OBJECTS)
 
 clean:
 	rm -f *.o

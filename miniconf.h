@@ -36,8 +36,6 @@
 #define PST_AFVALUE 4
 #define PST_INQUOTE 5
 
-
-
 extern const int MINCF_OK;
 extern const int MINCF_ERROR;
 extern const int MINCF_ARGUMENT_ERROR;
@@ -45,8 +43,6 @@ extern const int MINCF_MEMORY_ERROR;
 extern const int MINCF_FILE_NOT_FOUND;
 extern const int MINCF_SYNTAX_ERROR;
 extern const int MINCF_NOT_FOUND;
-
-
 
 typedef struct {
     int k0; int kn;
@@ -61,7 +57,6 @@ typedef struct {
     size_t records_sz;
     mincf_rec* records;
 } miniconf;
-
 
 int mincf_parse_stream(miniconf *cfg, FILE *in);
 int mincf_read(miniconf *cfg, char *fn);

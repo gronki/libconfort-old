@@ -1,38 +1,33 @@
-CC := gcc
-FC := gfortran
+INCLUDE	 	= -I. -I..
 
-override ALL_CFLAGS = -I..
-override ALL_FCFLAGS = -I..
+CC			?= cc
+FC			:= $(if $(filter $(FC),f77),f95,$(FC))
 
-CFLAGS= -Og -g
-FCFLAGS= -Og -g
+CFLAGS		?= -Og -Wall
+FFLAGS		?= -Og -Wall
+FFLAGS		+= -fimplicit-none -std=f2008
 
-# Fortran compilers
-ifeq ($(FC),gfortran)
-override ALL_FCFLAGS += -std=f2008 -fimplicit-none
-endif
-ifeq ($(FC),ifort)
-override ALL_FCFLAGS += -implicitnone
-endif
-
-override ALL_CFLAGS += $(CFLAGS)
-override ALL_FCFLAGS += $(FCFLAGS)
+COMPILE.C 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -fPIC -c
+COMPILE.F    		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -fPIC -c
+LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
+LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
+LINK       			= $(LD) --build-id $(LDFLAGS)
 
 all: bin/test_f bin/test_c
 
 bin/test_f: test_f.f90 ../libminiconf.a
 	mkdir -p bin
-	$(FC) $(ALL_FCFLAGS) -o $@ $^
+	$(LINK.F) $^ -o $@
 
 bin/test_c: test_c.c ../libminiconf.a
 	mkdir -p bin
-	$(CC) $(ALL_CFLAGS) -o $@ $^
+	$(LINK.C) $^ -o $@
 
-../libminiconf.a: ../miniconf.F90 ../miniconf.c ../miniconf.h
-	$(MAKE) -C .. CFLAGS="$(CFLAGS)" FCFLAGS="$(FCFLAGS)"
+../libminiconf.a:
+	$(MAKE) -C ..
 
 clean:
 	rm -f *.o *.mod
+	rm -rf bin
 
 distclean: clean
-	rm -rf bin

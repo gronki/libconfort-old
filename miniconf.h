@@ -38,13 +38,13 @@
 #define PST_AFVALUE 4
 #define PST_INQUOTE 5
 
-extern const int MINCF_OK;
-extern const int MINCF_ERROR;
-extern const int MINCF_ARGUMENT_ERROR;
-extern const int MINCF_MEMORY_ERROR;
-extern const int MINCF_FILE_NOT_FOUND;
-extern const int MINCF_SYNTAX_ERROR;
-extern const int MINCF_NOT_FOUND;
+#define MINCF_OK                   (0)
+#define MINCF_ERROR                (1)
+#define MINCF_ARGUMENT_ERROR    (1<<1)
+#define MINCF_MEMORY_ERROR      (1<<2)
+#define MINCF_FILE_NOT_FOUND    (1<<3)
+#define MINCF_SYNTAX_ERROR      (1<<4)
+#define MINCF_NOT_FOUND         (1<<5)
 
 typedef struct {
     int k0; int kn;

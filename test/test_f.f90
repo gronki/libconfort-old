@@ -42,11 +42,10 @@ contains
         integer, intent(inout) :: failure
         integer(c_int) :: errno
         type(miniconf_c) :: cfg
+        character(len=*), parameter :: fn = "Tegoplikuniema"
         failure = 0
 
-        call mincf_read_file(cfg, &
-                & "Tegoplikuniema" // char(0), &
-                & errno)
+        call mincf_read_file(cfg, fn, len(fn), errno)
 
         if (errno .eq. 0) then
             failure = 1
@@ -60,11 +59,10 @@ contains
         integer(c_int) :: errno
         type(miniconf_c) :: cfg
         character(len=150) :: buf
+        character(len=*), parameter :: fn = "test.cfg"
         failure = 0
 
-        call mincf_read_file(cfg, &
-                & "test.cfg" // char(0), &
-                & errno)
+        call mincf_read_file(cfg, fn, len(fn), errno)
 
         if (errno .ne. MINCF_OK) then
             failure = 1
@@ -87,10 +85,10 @@ contains
         integer, intent(inout) :: failure
         integer(c_int) :: errno
         type(miniconf_c) :: cfg
+        character(len=*), parameter :: fn = "test.cfg"
         failure = 0
 
-        call mincf_read_file(cfg, &
-                & "test.cfg" // char(0), errno)
+        call mincf_read_file(cfg, fn, len(fn), errno)
 
         if (errno .ne. MINCF_OK) then
             failure = 1

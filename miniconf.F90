@@ -38,22 +38,23 @@ module miniconf
         type(c_ptr) :: records
     end type
 
-    integer, external :: MINCF_OK
-    integer, external :: MINCF_ERROR
-    integer, external :: MINCF_ARGUMENT_ERROR
-    integer, external :: MINCF_MEMORY_ERROR
-    integer, external :: MINCF_FILE_NOT_FOUND
-    integer, external :: MINCF_SYNTAX_ERROR
-    integer, external :: MINCF_NOT_FOUND
+    integer, parameter :: MINCF_OK =                0
+    integer, parameter :: MINCF_ERROR =             1
+    integer, parameter :: MINCF_ARGUMENT_ERROR =    ishft(1,1)
+    integer, parameter :: MINCF_MEMORY_ERROR =      ishft(1,2)
+    integer, parameter :: MINCF_FILE_NOT_FOUND =    ishft(1,3)
+    integer, parameter :: MINCF_SYNTAX_ERROR =      ishft(1,4)
+    integer, parameter :: MINCF_NOT_FOUND =         ishft(1,5)
 
     interface
 
-        subroutine mincf_read_file(cfg,file,errno) &
+        subroutine mincf_read_file(cfg,fn,fnsz,errno) &
                 & bind(C,name='fort_mincf_read_file')
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char), intent(in) :: file(*)
+            integer(c_int), intent(in), value :: fnsz
+            character(c_char), intent(in) :: fn(fnsz)
             integer(c_int), intent(out) :: errno
         end subroutine
 

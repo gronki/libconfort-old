@@ -94,14 +94,6 @@ module miniconf
             type(miniconf_c), intent(inout) :: cfg
         end subroutine
 
-        function c_strlen(s) &
-            & result(length) &
-            & bind(C,name='strlen')
-            use iso_c_binding
-            character(c_char), intent(in) :: s(*)
-            integer(c_size_t) :: length
-        end function
-
     end interface
 
 end module

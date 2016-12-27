@@ -1,33 +1,44 @@
-INCLUDE	 	= -I. -I..
+FSOURCES 	 = $(wildcard *.F90)
+CSOURCES 	 = $(wildcard *.c)
+TESTS		 = $(FSOURCES:.F90=) $(CSOURCES:.c=)
+PROGS 	  	 = $(addprefix bin/,$(TESTS))
+CERTS 	  	 = $(addprefix out/,$(TESTS))
 
-CC			?= cc
-FC			:= $(if $(filter $(FC),f77),f95,$(FC))
+INCLUDE	 	 = -I..
 
-CFLAGS		?= -Og -Wall
-FFLAGS		?= -Og -Wall
-FFLAGS		+= -fimplicit-none -std=f2008
+CC  	 	 := cc
+FC 		 	 := f95
 
-COMPILE.C 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -fPIC -c
-COMPILE.F    		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -fPIC -c
-LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
-LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
-LINK       			= $(LD) --build-id $(LDFLAGS)
+CFLAGS 	 	 := -Og -Wall -mieee-fp
+FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none -fcheck=all
 
-all: bin/test_f bin/test_c
+COMPILE.c 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -c
+COMPILE.F    = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -c
+LINK.C 	 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
+LINK.F    	 = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
+LINK.O       = $(LD) --build-id $(LDFLAGS)
 
-bin/test_f: test_f.f90 ../libminiconf.a
+################################################
+
+all: $(CERTS)
+
+out/%: bin/%
+	mkdir -p out
+	bash runtest.sh $(subst out/,,$@)
+
+bin/%: %.F90 ../libminiconf.a
 	mkdir -p bin
-	$(LINK.F) $^ -o $@
-
-bin/test_c: test_c.c ../libminiconf.a
+	$(LINK.F) -L.. -I.. $^ -o $@
+bin/%: %.c ../libminiconf.a
 	mkdir -p bin
-	$(LINK.C) $^ -o $@
+	$(LINK.C) -L.. -I.. $^ -o $@
 
-../libminiconf.a:
-	$(MAKE) -C ..
+../libminiconf.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)
+	$(MAKE) -B -C .. CC=$(CC) FC=$(FC) $@
 
 clean:
-	rm -f *.o *.mod
-	rm -rf bin
+	rm -rfv *.o *.mod *.pass *.fail bin out
 
 distclean: clean
+
+.SECONDARY: $(PROGS)

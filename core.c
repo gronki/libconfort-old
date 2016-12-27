@@ -227,7 +227,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
 
 
 mincf_rec* mincf_record_query(miniconf *cfg, char *key) {
-    size_t key_sz,i;
+    int key_sz,i;
     mincf_rec *rec;
 
     if (!key || !cfg)  return NULL;
@@ -236,7 +236,7 @@ mincf_rec* mincf_record_query(miniconf *cfg, char *key) {
 
     // go from last to first, so that last defined record with the same name
     // is significant
-    for ( i = cfg->n_records-1; i >= 0; i-- ) {
+    for ( i = cfg->n_records-1; i >= 0; --i ) {
         rec = &(cfg->records[i]);
         // if length doesn't match, early continue
         if ( rec->kn != key_sz ) continue;

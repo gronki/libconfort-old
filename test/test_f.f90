@@ -73,7 +73,7 @@ contains
                 & "blablablablabla" // char(0), &
                 & buf, len(buf,kind=c_size_t), errno)
 
-        if ( errno .ne. MINCF_NOT_FOUND )  &
+        if ( iand(errno,MINCF_NOT_FOUND) .eq. 0 )  &
             & failure = 1
 
         call mincf_free(cfg)

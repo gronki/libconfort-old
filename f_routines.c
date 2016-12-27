@@ -80,10 +80,30 @@ void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno) {
 }
 
 void fort_mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, int* errno) {
-    *errno = mincf_get(cfg,key,buf,sz,NULL);
-    if ( *errno == 0 ) cstr_fix(buf,sz);
+    mincf_rec *rec;
+
+    *errno = MINCF_OK;
+    rec = mincf_record_query(cfg,key);
+
+    if ( rec ) {
+        if (buf) {
+            mincf_export_rec(cfg,rec,buf,sz);
+        } else {
+            *errno = (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
+        }
+    } else {
+        *errno = (MINCF_ERROR | MINCF_NOT_FOUND);
+    }
+    if ( *errno == MINCF_OK ) cstr_fix(buf,sz);
 }
+
 void fort_mincf_get_default(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue, int* errno) {
-    *errno = mincf_get(cfg,key,buf,sz,defvalue);
-    if ( *errno == 0 ) cstr_fix(buf,sz);
+
+    fort_mincf_get(cfg,key,buf,sz,errno);
+    if ( *errno != MINCF_OK ) {
+        strncpy(buf,defvalue,sz);
+        *errno = MINCF_OK;
+    }
+    cstr_fix(buf,sz);
+
 }

@@ -249,6 +249,11 @@ mincf_rec* mincf_record_query(miniconf *cfg, char *key) {
     return NULL;
 }
 
+char *mincf_export_rec(miniconf *cfg, mincf_rec *rec, char *buf, size_t sz) {
+    size_t n = (rec->vn < sz-1) ? rec->vn : sz-1;
+    return strncpy(buf, &(cfg->buffer[rec->v0]), n);
+}
+
 /*** mincf_free ***
  * @param cfg       Reference to miniconf structure
  */

@@ -63,6 +63,7 @@ typedef struct {
 // core functions
 int mincf_parse_stream(miniconf *cfg, FILE *in);
 mincf_rec* mincf_record_query(miniconf *cfg, char *key);
+char *mincf_export_rec(miniconf *cfg, mincf_rec *rec, char *buf, size_t sz);
 void mincf_free(miniconf *cfg);
 
 // C interface

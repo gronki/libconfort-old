@@ -66,7 +66,6 @@ int mincf_get(miniconf *cfg, char *key,
         char *buf, size_t sz,
         char *defvalue) {
     mincf_rec *rec;
-    size_t n;
 
     if (!key || !cfg)  return (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
 
@@ -75,8 +74,7 @@ int mincf_get(miniconf *cfg, char *key,
     if ( rec ) {
         if (buf) {
             // select shorter length (value or buffer) for copying
-            n = (rec->vn < sz-1) ? rec->vn : sz-1;
-            strncpy(buf, &(cfg->buffer[rec->v0]), n);
+            mincf_export_rec(cfg,rec,buf,sz);
         }
         return MINCF_OK;
     } else {

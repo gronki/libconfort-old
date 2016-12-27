@@ -60,10 +60,19 @@ typedef struct {
     mincf_rec* records;
 } miniconf;
 
+// core functions
 int mincf_parse_stream(miniconf *cfg, FILE *in);
-int mincf_read(miniconf *cfg, char *fn);
 mincf_rec* mincf_record_query(miniconf *cfg, char *key);
-int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
 void mincf_free(miniconf *cfg);
+
+// C interface
+int mincf_read(miniconf *cfg, char *fn);
+int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
+
+// Fortran interface
+void cstr_fix(char *buf, size_t sz);
+char *cstr_alloc(char *buf, size_t sz);
+void fort_mincf_read_stdin(miniconf *cfg, int *errno);
+void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno);
 
 #endif

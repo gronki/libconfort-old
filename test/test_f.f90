@@ -45,7 +45,7 @@ contains
         character(len=*), parameter :: fn = "Tegoplikuniema"
         failure = 0
 
-        call mincf_read_file(cfg, fn, len(fn), errno)
+        call mincf_read_file(cfg, fn // char(0), errno)
 
         if (errno .eq. 0) then
             failure = 1
@@ -62,7 +62,7 @@ contains
         character(len=*), parameter :: fn = "test.cfg"
         failure = 0
 
-        call mincf_read_file(cfg, fn, len(fn), errno)
+        call mincf_read_file(cfg, fn // char(0), errno)
 
         if (errno .ne. MINCF_OK) then
             failure = 1
@@ -88,7 +88,7 @@ contains
         character(len=*), parameter :: fn = "test.cfg"
         failure = 0
 
-        call mincf_read_file(cfg, fn, len(fn), errno)
+        call mincf_read_file(cfg, fn // char(0), errno)
 
         if (errno .ne. MINCF_OK) then
             failure = 1

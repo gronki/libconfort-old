@@ -67,23 +67,16 @@ void fort_mincf_read_stdin(miniconf *cfg, int *errno) {
     *errno = mincf_parse_stream(cfg,stdin);
 }
 
-void fort_mincf_read_file(miniconf *cfg, char *fn, int fnsz, int *errno) {
+void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno) {
     FILE* f;
-    char *fnz;
 
-    fnz = cstr_alloc(fn,fnsz);
-
-    if (!fnz) {
-        *errno = (MINCF_ERROR | MINCF_MEMORY_ERROR);
-        return;
-    }
-
-    f = fopen(fnz,"r");
+    f = fopen(fn,"r");
     if (f) {
         *errno = mincf_parse_stream(cfg,f);
         fclose(f);
+    } else {
+        *errno = (MINCF_ERROR | MINCF_FILE_NOT_FOUND);
     }
-    free(fnz);
 }
 
 void fort_mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, int* errno) {

@@ -48,13 +48,12 @@ module miniconf
 
     interface
 
-        subroutine mincf_read_file(cfg,fn,fnsz,errno) &
+        subroutine mincf_read_file(cfg,fn,errno) &
                 & bind(C,name='fort_mincf_read_file')
             use iso_c_binding
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            integer(c_int), intent(in), value :: fnsz
-            character(c_char), intent(in) :: fn(fnsz)
+            character(c_char), intent(in) :: fn(*)
             integer(c_int), intent(out) :: errno
         end subroutine
 
@@ -71,9 +70,9 @@ module miniconf
             use iso_c_binding
             import miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char), intent(in) :: key(*)
+            character(c_char), intent(in) :: key(*)
             integer(c_size_t), intent(in), value :: sz
-            character(kind=c_char), intent(inout) :: buf(sz)
+            character(c_char), intent(inout) :: buf(sz)
             integer(c_int), intent(out) :: errno
         end subroutine
 
@@ -82,9 +81,9 @@ module miniconf
             use iso_c_binding
             import miniconf_c
             type(miniconf_c), intent(inout) :: cfg
-            character(kind=c_char), intent(in) :: key(*), defvalue(*)
+            character(c_char), intent(in) :: key(*), defvalue(*)
             integer(c_size_t), intent(in), value :: sz
-            character(kind=c_char), intent(inout) :: buf(sz)
+            character(c_char), intent(inout) :: buf(sz)
             integer(c_int), intent(out) :: errno
         end subroutine
 

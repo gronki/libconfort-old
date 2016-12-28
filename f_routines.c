@@ -67,43 +67,57 @@ void fort_mincf_read_stdin(miniconf *cfg, int *errno) {
     *errno = mincf_parse_stream(cfg,stdin);
 }
 
-void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno) {
+void fort_mincf_read_file(miniconf *cfg, char *fn_str, size_t fn_sz, int *errno) {
     FILE* f;
+    char *fn = cstr_alloc(fn_str,fn_sz);
 
     f = fopen(fn,"r");
+
     if (f) {
         *errno = mincf_parse_stream(cfg,f);
         fclose(f);
     } else {
         *errno = (MINCF_ERROR | MINCF_FILE_NOT_FOUND);
     }
+    free(fn);
 }
 
-void fort_mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, int* errno) {
+void fort_mincf_get(miniconf *cfg,
+            char *key_str, size_t key_sz,
+            char *buf, size_t sz,
+            int* errno) {
     mincf_rec *rec;
+    char *key = cstr_alloc(key_str,key_sz);
 
-    *errno = MINCF_OK;
     rec = mincf_record_query(cfg,key);
 
     if ( rec ) {
         if (buf) {
             mincf_export_rec(cfg,rec,buf,sz);
+            cstr_fix(buf,sz);
+            *errno = MINCF_OK;
         } else {
             *errno = (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
         }
     } else {
         *errno = (MINCF_ERROR | MINCF_NOT_FOUND);
     }
-    if ( *errno == MINCF_OK ) cstr_fix(buf,sz);
+
+    free(key);
 }
 
-void fort_mincf_get_default(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue, int* errno) {
+void fort_mincf_get_default(miniconf *cfg,
+        char *key_str, size_t key_sz,
+        char *buf, size_t sz,
+        char *defvalue_str, size_t defvalue_sz,
+        int* errno) {
 
-    fort_mincf_get(cfg,key,buf,sz,errno);
+    fort_mincf_get(cfg,key_str,key_sz,buf,sz,errno);
     if ( *errno != MINCF_OK ) {
-        strncpy(buf,defvalue,sz);
+        memcpy(buf,defvalue_str, (sz < defvalue_sz) ? sz : defvalue_sz );
         *errno = MINCF_OK;
+    } else {
+        cstr_fix(buf,sz);
     }
-    cstr_fix(buf,sz);
 
 }

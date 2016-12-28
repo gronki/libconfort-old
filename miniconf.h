@@ -74,6 +74,14 @@ int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
 void cstr_fix(char *buf, size_t sz);
 char *cstr_alloc(char *buf, size_t sz);
 void fort_mincf_read_stdin(miniconf *cfg, int *errno);
-void fort_mincf_read_file(miniconf *cfg, char *fn, int *errno);
-
+void fort_mincf_read_file(miniconf *cfg, char *fn_str, size_t fn_sz, int *errno);
+void fort_mincf_get_default(miniconf *cfg,
+        char *key_str, size_t key_sz,
+        char *buf, size_t sz,
+        char *defvalue_str, size_t defvalue_sz,
+        int* errno);
+void fort_mincf_get(miniconf *cfg,
+            char *key_str, size_t key_sz,
+            char *buf, size_t sz,
+            int* errno);
 #endif

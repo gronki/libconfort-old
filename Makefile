@@ -14,6 +14,7 @@ INCLUDE	 	 		= -I.
 
 CC  	 	 		?= cc
 FC 		 	 		:= $(if $(filter $(FC),f77),f95,$(FC))
+CPP					:= cpp -nostdinc
 
 # GNU Fortran (gfortran/f95)
 FFLAGS_f95			:= -std=f2008 -fimplicit-none
@@ -46,7 +47,7 @@ libminiconf.a: $(OBJECTS)
 %.o: %.f90
 	$(COMPILE.F) $< -o $@
 %.f90: %.F90
-	cpp -P -nostdinc $(INCLUDE) $(CPPFLAGS) $< -o $@
+	$(CPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
 %.o: %.mod
 
 .INTERMEDIATE: $(OBJECTS)

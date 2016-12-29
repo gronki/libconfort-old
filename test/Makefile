@@ -8,9 +8,11 @@ INCLUDE	 	 = -I. -I..
 
 CC  	 	 := cc
 FC 		 	 := f95
+CPP			 := cpp -nostdinc
 
 CFLAGS 	 	 := -Og -Wall -mieee-fp
-FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none -fbackslash -fcheck=all -fbacktrace
+FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none
+FFLAGS 		 += -fbackslash -fcheck=all -fbacktrace
 
 COMPILE.C 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -c
 COMPILE.F    = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -c
@@ -33,12 +35,12 @@ bin/%_c: common_c.o %.c ../libminiconf.a
 	mkdir -p bin
 	$(LINK.C) -L.. $^ -o $@
 
+%.o: %.c
+	$(COMPILE.C) $< -o $@
 %.o: %.f90
 	$(COMPILE.F) $< -o $@
 %.f90: %.F90
-	cpp -P -nostdinc -Wtraditional $(INCLUDE) $(CPPFLAGS) $< -o $@
-%.o: %.c
-	$(COMPILE.C) $< -o $@
+	$(CPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
 %.o: %.mod
 
 ../libminiconf.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)

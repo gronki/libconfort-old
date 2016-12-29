@@ -114,6 +114,7 @@ void fort_mincf_get_default(miniconf *cfg,
 
     fort_mincf_get(cfg,key_str,key_sz,buf,sz,errno);
     if ( *errno != MINCF_OK ) {
+        memset(buf,0x20,sz);
         memcpy(buf,defvalue_str, (sz < defvalue_sz) ? sz : defvalue_sz );
         *errno = MINCF_OK;
     } else {

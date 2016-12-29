@@ -10,7 +10,7 @@ CC  	 	 := cc
 FC 		 	 := f95
 
 CFLAGS 	 	 := -Og -Wall -mieee-fp
-FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none -fcheck=all -fbacktrace
+FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none -fbackslash -fcheck=all -fbacktrace
 
 COMPILE.C 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -c
 COMPILE.F    = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -c

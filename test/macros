@@ -1,1 +1,2 @@
 #define test(x) test0(__FILE__,__LINE__,x,#x)
+#define ftest(x) ftest0(__FILE__,__LINE__,x,#x)

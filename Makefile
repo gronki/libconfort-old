@@ -43,9 +43,10 @@ libminiconf.a: $(OBJECTS)
 
 %.o: %.c
 	$(COMPILE.C) $< -o $@
-
-%.o: %.F90
+%.o: %.f90
 	$(COMPILE.F) $< -o $@
+%.f90: %.F90
+	cpp -P -nostdinc $(INCLUDE) $(CPPFLAGS) $< -o $@
 
 .INTERMEDIATE: $(OBJECTS)
 

@@ -1,4 +1,4 @@
-!  *************** M I N I C O N F ***************
+!  /************** M I N I C O N F ***************
 !    This small library allows to read a simple
 !     configuration file. Data can be read from
 !     any FILE* handle (for example stdin).
@@ -19,7 +19,7 @@
 !     key5   6.0  7.5  # hoorayy it's the end
 !     --------------------------
 !
-! ************************************************
+! ************************************************/
 
 
 module miniconf

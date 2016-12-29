@@ -1,5 +1,7 @@
 module tests_common
 
+    use iso_fortran_env
+    character(len=*), parameter, private :: fmt = '(A," has ",A," the test (",I0,"): ",A)'
 
 contains
 
@@ -7,7 +9,6 @@ contains
         character(len=*), intent(in) :: file,name
         integer, intent(in) :: line
         logical, intent(in) :: l
-        character(len=*), parameter :: fmt = '(A," has ",A," the test (",I0,"): ",A)'
 
         if (l) then
             write (*,fmt)  file,  "PASSED", line, name
@@ -20,7 +21,6 @@ contains
         character(len=*), intent(in) :: file,name
         integer, intent(in) :: line
         logical, intent(in) :: l
-        character(len=*), parameter :: fmt = '(A," has ",A," the test (",I0,"): ",A)'
 
         if (l) then
             write (*,fmt)  file,  "PASSED", line, name

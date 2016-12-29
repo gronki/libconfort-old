@@ -45,6 +45,7 @@ int mincf_read(miniconf *cfg, char *fn) {
         errno = mincf_parse_stream(cfg,f);
         fclose(f);
     } else {
+        memset(cfg,0,sizeof(miniconf));
         errno = (MINCF_ERROR | MINCF_FILE_NOT_FOUND);
     }
     return errno;

@@ -70,7 +70,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
     cfg -> records_sz = 128;
     cfg -> records = (mincf_rec*) malloc(cfg -> records_sz * sizeof(mincf_rec));
     if (!cfg -> records) {
-        free(cfg -> buffer);
+        mincf_free(cfg);
         return (MINCF_ERROR | MINCF_MEMORY_ERROR);
     }
     memset(cfg->records, 0, cfg -> records_sz * sizeof(mincf_rec));

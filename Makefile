@@ -47,6 +47,7 @@ libminiconf.a: $(OBJECTS)
 	$(COMPILE.F) $< -o $@
 %.f90: %.F90
 	cpp -P -nostdinc $(INCLUDE) $(CPPFLAGS) $< -o $@
+%.o: %.mod
 
 .INTERMEDIATE: $(OBJECTS)
 

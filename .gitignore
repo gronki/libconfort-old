@@ -10,3 +10,5 @@ miniconf.pc
 /libminiconf-*/
 *.rpm
 /libminiconf-*.tar.xz
+*.f90
+*.smod

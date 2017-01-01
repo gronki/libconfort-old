@@ -55,7 +55,7 @@ libminiconf.a: $(OBJECTS)
 clean:
 	rm -f *.o
 	$(MAKE) -C 'test' clean
-	rm -f *.mod *.a *.so *.dll miniconf.pc
+	rm -f *.mod *.smod *.f90 *.a *.so *.dll miniconf.pc
 
 distclean: clean
 	find -name 'libminiconf-*' -type d -print0 | xargs -0 rm -rfv

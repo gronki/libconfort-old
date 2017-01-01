@@ -89,3 +89,13 @@ int mincf_get(miniconf *cfg, char *key,
     }
 
 }
+
+int mincf_exists(miniconf *cfg, char *key) {
+    mincf_rec *rec;
+
+    if (!key || !cfg)  return (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
+
+    return mincf_record_query(cfg,key) 
+        ? MINCF_OK
+        : (MINCF_OK | MINCF_NOT_FOUND);
+}

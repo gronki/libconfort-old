@@ -69,6 +69,7 @@ void mincf_free(miniconf *cfg);
 // C interface
 int mincf_read(miniconf *cfg, char *fn);
 int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
+int mincf_exists(miniconf *cfg, char *key);
 
 // Fortran interface
 void cstr_fix(char *buf, size_t sz);

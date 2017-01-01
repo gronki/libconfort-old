@@ -44,7 +44,7 @@ bin/%_c: common_c.o %.c ../libminiconf.a
 %.o: %.mod
 
 ../libminiconf.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)
-	$(MAKE) -B -C .. CC=$(CC) FC=$(FC) $@
+	$(MAKE) -C .. CC=$(CC) FC=$(FC)
 
 clean:
 	rm -rfv *.o *.mod *.pass *.fail bin out

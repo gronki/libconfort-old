@@ -1,7 +1,7 @@
 module tests_common
 
     use iso_fortran_env
-    character(len=*), parameter, private :: fmt = '(A," has ",A," the test (",I0,"): ",A)'
+    character(len=*), parameter, private :: fmt = '(A," has ",A," the test (line ",I0,"): ",A)'
 
 contains
 

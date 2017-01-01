@@ -106,6 +106,23 @@ void fort_mincf_get(miniconf *cfg,
     free(key);
 }
 
+void fort_mincf_get_exists(miniconf *cfg,
+            char *key_str, size_t key_sz,
+            int* errno) {
+    mincf_rec *rec;
+    char *key = cstr_alloc(key_str,key_sz);
+
+    rec = mincf_record_query(cfg,key);
+
+    if ( rec ) {
+        *errno = MINCF_OK;
+    } else {
+        *errno = (MINCF_ERROR | MINCF_NOT_FOUND);
+    }
+
+    free(key);
+}
+
 void fort_mincf_get_default(miniconf *cfg,
         char *key_str, size_t key_sz,
         char *buf, size_t sz,
@@ -117,6 +134,6 @@ void fort_mincf_get_default(miniconf *cfg,
         memset(buf,0x20,sz);
         memcpy(buf,defvalue_str, (sz < defvalue_sz) ? sz : defvalue_sz );
         *errno = MINCF_OK;
-    } 
+    }
 
 }

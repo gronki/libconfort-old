@@ -78,6 +78,16 @@ module miniconf
             integer(c_int), intent(out) :: errno
         end subroutine
 
+        subroutine mincf_get_exists(cfg,key,key_sz,errno) &
+                & bind(C,name='fort_mincf_get_exists')
+            use iso_c_binding
+            import miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            integer(c_size_t), intent(in), value :: key_sz
+            character(c_char), intent(in) :: key(key_sz)
+            integer(c_int), intent(out) :: errno
+        end subroutine
+
         subroutine mincf_get_default(cfg,key,key_sz,buf,sz,defvalue,defvalue_sz,errno) &
                 & bind(C,name='fort_mincf_get_default')
             use iso_c_binding

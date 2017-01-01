@@ -84,4 +84,7 @@ void fort_mincf_get(miniconf *cfg,
             char *key_str, size_t key_sz,
             char *buf, size_t sz,
             int* errno);
+void fort_mincf_get_exists(miniconf *cfg,
+            char *key_str, size_t key_sz,
+            int* errno);
 #endif

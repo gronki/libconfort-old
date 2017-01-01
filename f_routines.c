@@ -117,7 +117,7 @@ void fort_mincf_get_exists(miniconf *cfg,
     if ( rec ) {
         *errno = MINCF_OK;
     } else {
-        *errno = (MINCF_ERROR | MINCF_NOT_FOUND);
+        *errno = (MINCF_OK | MINCF_NOT_FOUND);
     }
 
     free(key);

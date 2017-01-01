@@ -26,7 +26,7 @@ program test_nonexistent_key
             & key_wrong, len(key_wrong,c_size_t), errno)
 
         call test( errno .ne. MINCF_OK )
-        call test( iand(errno, MINCF_ERROR) .ne. 0 )
+        call test( iand(errno, MINCF_ERROR) .eq. 0 )
         call test( iand(errno, MINCF_NOT_FOUND) .ne. 0 )
 
         call mincf_free(cfg)

@@ -46,6 +46,7 @@ module miniconf
     integer, parameter :: MINCF_SYNTAX_ERROR =      ishft(1,4)
     integer, parameter :: MINCF_NOT_FOUND =         ishft(1,5)
 
+    !// read the config
 
     interface mincf_read
 
@@ -64,6 +65,8 @@ module miniconf
         end subroutine
 
     end interface
+
+    !// get entry -- subroutine style
 
     interface mincf_get
         module subroutine mincf_get_or_error(cfg,key,buf,errno)
@@ -87,7 +90,24 @@ module miniconf
         end subroutine
     end interface
 
+    !// error checking
+
+    interface mincf_check_error
+
+        module logical function mincf_had_error(errno)
+            integer, intent(in) :: errno
+        end function
+
+        module logical function mincf_this_error(errno,errflag)
+            integer, intent(in) :: errno,errflag
+        end function
+
+    end interface
+
+    !// Other procedures
+
     interface
+
         module logical function mincf_exists(cfg,key)
             type(miniconf_c), intent(out) :: cfg
             character(len=*), intent(in) :: key
@@ -99,7 +119,10 @@ module miniconf
             import :: miniconf_c
             type(miniconf_c), intent(inout) :: cfg
         end subroutine
+
     end interface
+
+    !// C binding interfaces
 
     interface
 

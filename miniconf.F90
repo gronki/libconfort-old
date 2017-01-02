@@ -100,7 +100,7 @@ module miniconf
 
     interface mincf_check_error
 
-        module logical function mincf_had_error(errno)
+        module logical function mincf_failed(errno)
             integer, intent(in) :: errno
         end function
 

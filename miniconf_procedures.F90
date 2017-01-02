@@ -69,9 +69,9 @@ contains
                 & errno)
     end subroutine
 
-    logical function mincf_had_error(errno)
+    logical function mincf_failed(errno)
         integer, intent(in) :: errno
-        mincf_had_error = iand(errno,MINCF_ERROR) .ne. 0
+        mincf_failed = iand(errno,MINCF_ERROR) .ne. 0
     end function
 
     logical function mincf_this_error(errno,errflag)

@@ -130,6 +130,11 @@ module miniconf
 
     !// C binding interfaces
 
+    private :: c_mincf_read_file
+    private :: c_mincf_get
+    private :: c_mincf_get_exists
+    private :: c_mincf_get_default
+
     interface
 
         subroutine c_mincf_read_file(cfg,fn,sz,errno) &

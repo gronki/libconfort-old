@@ -26,6 +26,7 @@ contains
 
         if ( mincf_failed(errno) ) then
             write (error_unit,"('miniconf: entry ""',A,'"" not found.')") key
+            call mincf_free(cfg)
             error stop "runtime error"
         end if
     end subroutine

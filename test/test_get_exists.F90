@@ -13,21 +13,21 @@ program test_nonexistent_key
     character(len=*), parameter :: key_ok = "key1"
     character(len=*), parameter :: key_wrong = "sajiifwcrhcri"
 
-    call mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    call mincf_read_file(cfg, fn, errno)
 
     if ( ftest(errno .eq. MINCF_OK) ) then
 
-        call mincf_get_exists(cfg, &
-                & key_ok, len(key_ok,c_size_t), errno)
-
+        call mincf_get(cfg, key_ok, errno)
         call test( errno .eq. MINCF_OK )
+        call test( mincf_exists(cfg,key_ok) )
 
-        call mincf_get_exists(cfg, &
-            & key_wrong, len(key_wrong,c_size_t), errno)
+
+        call mincf_get(cfg, key_wrong, errno)
 
         call test( errno .ne. MINCF_OK )
         call test( iand(errno, MINCF_ERROR) .eq. 0 )
         call test( iand(errno, MINCF_NOT_FOUND) .ne. 0 )
+        call test( .not. mincf_exists(cfg,key_wrong) )
 
         call mincf_free(cfg)
 

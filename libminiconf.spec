@@ -1,5 +1,5 @@
 Name:           libminiconf
-Version:        161226
+Version:        170102
 Release:        1%{?dist}
 Summary:        Mini Config
 
@@ -7,8 +7,8 @@ License:        MIT
 URL:            http://github.com/gronki/libminiconf
 Source:         libminiconf-%{version}.tar.xz
 
-BuildRequires:  gcc gcc-gfortran
-Requires:       gcc gcc-gfortran
+BuildRequires:  gcc-gfortran
+Requires:       glibc libgfortran libquadmath libgcc
 
 %description
 A minimalistic utility for reading configuration files. Easy to use Fortran 2008 bindings are included. Compatible with GCC and Intel compilers. (This packages is built for GCC.)
@@ -25,20 +25,25 @@ developing applications that use %{name}.
 %autosetup
 
 %build
-make DESTDIR=$RPM_BUILD_ROOT \
-        prefix="/usr" \
-        bindir="%{_bindir}"  \
-        libdir="%{_libdir}"  \
+export OPT_FLAGS="%{optflags} -ftree-vectorize -finline-functions -funroll-loops -mieee-fp"
+export CFLAGS="$OPT_FLAGS"
+export FFLAGS="$OPT_FLAGS"
+make    DESTDIR="%{buildroot}" \
+        prefix="%{_prefix}" \
+        bindir="%{_bindir}" \
+        libdir="%{_libdir}" \
+        fmoddir="%{_fmoddir}" \
         includedir="%{_includedir}"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT \
-        prefix="/usr" \
-        bindir="%{_bindir}"  \
-        libdir="%{_libdir}"  \
+rm -rf %{buildroot}
+make install DESTDIR="%{buildroot}" \
+        prefix="%{_prefix}" \
+        bindir="%{_bindir}" \
+        libdir="%{_libdir}" \
+        fmoddir="%{_fmoddir}" \
         includedir="%{_includedir}"
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %post
 /sbin/ldconfig
@@ -50,7 +55,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/*.so
 
 %files devel
-%{_includedir}/miniconf/*
-#%{_libdir}/*.so
+%{_includedir}/*
+%{_fmoddir}/*
 %{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc

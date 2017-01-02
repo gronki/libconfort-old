@@ -12,13 +12,11 @@ program test_nonexistent_key
     character(len=*), parameter :: fn = "test.cfg"
     character(len=*), parameter :: key = "sajiifwcrhcri"
 
-    call mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    call mincf_read_file(cfg, fn, errno)
 
     call test(errno .eq. MINCF_OK)
 
-    call mincf_get(cfg, &
-            & key, len(key,c_size_t), &
-            & buf, len(buf,c_size_t), errno)
+    call mincf_get(cfg, key, buf, errno)
 
     call test(iand(errno,MINCF_NOT_FOUND) .ne. 0)
 

@@ -10,7 +10,7 @@ program test_nonexistent_file
     type(miniconf_c) :: cfg
     character(len=*), parameter :: fn = "Tegoplikuniema"
 
-    call mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    call mincf_read_file(cfg, fn, errno)
 
     call test(errno .ne. 0)
 

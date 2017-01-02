@@ -13,16 +13,17 @@ program test_nonexistent_key
     character(len=*), parameter :: key = "sajiifwcrhcri"
     character(len=*), parameter :: def = "domyslna"
 
-    call mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    call mincf_read_file(cfg, fn, errno)
 
     call test(errno .eq. MINCF_OK)
 
-    call mincf_get_default(cfg, &
-            & key, len(key,c_size_t), &
-            & buf, len(buf,c_size_t), &
-            & def, len(def,c_size_t), &
-            & errno)
 
+    call mincf_get(cfg, 'key1', buf, def, errno)
+    call test(iand(errno,MINCF_NOT_FOUND) .eq. 0)
+    call test(buf .eq. 'value1')
+
+
+    call mincf_get(cfg, key, buf, def, errno)
     call test(iand(errno,MINCF_NOT_FOUND) .eq. 0)
     call test(buf .eq. def)
 

@@ -12,12 +12,11 @@ program test_existing_key
     character(len=*), parameter :: key = "key1"
     character(len=150) :: buf
 
-    call mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    call mincf_read_file(cfg, fn, errno)
 
     if ( ftest(errno .eq. MINCF_OK) ) then
 
-        call mincf_get(cfg, key, len(key,c_size_t), &
-                & buf, len(buf,c_size_t), errno)
+        call mincf_get(cfg, key, buf, errno)
 
         call test(errno .eq. MINCF_OK)
         call test(buf .eq. 'value1')

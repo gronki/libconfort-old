@@ -56,6 +56,19 @@ contains
                 & errno)
     end subroutine
 
+    module subroutine mincf_get_yolo(cfg,key,buf,defvalue)
+        type(miniconf_c), intent(out) :: cfg
+        character(len=*), intent(in) :: key, defvalue
+        character(len=*), intent(out) :: buf
+        integer :: errno
+
+        call c_mincf_get_default(cfg, &
+                & key, len(key,c_size_t), &
+                & buf, len(buf,c_size_t), &
+                & defvalue, len(defvalue,c_size_t), &
+                & errno)
+    end subroutine
+
     logical function mincf_had_error(errno)
         integer, intent(in) :: errno
         mincf_had_error = iand(errno,MINCF_ERROR) .ne. 0

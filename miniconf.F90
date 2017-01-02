@@ -88,6 +88,12 @@ module miniconf
             character(len=*), intent(out) :: buf
             integer, intent(out) :: errno
         end subroutine
+
+        module subroutine mincf_get_yolo(cfg,key,buf,defvalue)
+            type(miniconf_c), intent(out) :: cfg
+            character(len=*), intent(in) :: key, defvalue
+            character(len=*), intent(out) :: buf
+        end subroutine
     end interface
 
     !// error checking

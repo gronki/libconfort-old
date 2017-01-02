@@ -69,6 +69,13 @@ module miniconf
     !// get entry -- subroutine style
 
     interface mincf_get
+
+        module subroutine mincf_get_or_stop(cfg,key,buf)
+            type(miniconf_c), intent(out) :: cfg
+            character(len=*), intent(in) :: key
+            character(len=*), intent(out) :: buf
+        end subroutine
+
         module subroutine mincf_get_or_error(cfg,key,buf,errno)
             type(miniconf_c), intent(out) :: cfg
             character(len=*), intent(in) :: key

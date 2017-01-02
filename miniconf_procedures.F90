@@ -1,16 +1,33 @@
 submodule(miniconf) miniconf_procedures
 
     use iso_c_binding
+    use iso_fortran_env
 
 contains
 
     subroutine mincf_read_file(cfg,fn,errno)
-
         type(miniconf_c), intent(inout) :: cfg
         character(len=*), intent(in) :: fn
         integer, intent(out) :: errno
 
         call c_mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
+    end subroutine
+
+    subroutine mincf_get_or_stop(cfg,key,buf)
+        type(miniconf_c), intent(out) :: cfg
+        character(len=*), intent(in) :: key
+        character(len=*), intent(out) :: buf
+        integer :: errno
+
+        call c_mincf_get(cfg, &
+                & key, len(key,c_size_t), &
+                & buf, len(buf,c_size_t), &
+                & errno)
+
+        if ( mincf_failed(errno) ) then
+            write (error_unit,"('miniconf: entry ""',A,'"" not found.')") key
+            error stop "runtime error"
+        end if
     end subroutine
 
     subroutine mincf_get_or_error(cfg,key,buf,errno)

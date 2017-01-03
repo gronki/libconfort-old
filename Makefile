@@ -9,7 +9,7 @@ libdir 	 	 		= $(exec_prefix)/lib
 fmoddir				= $(libdir)/gfortran/modules
 docdir 	 	 		= $(datadir)/doc
 
-OBJECTS	 	 		= core.o c_routines.o f_routines.o miniconf.o miniconf_procedures.o
+OBJECTS	 	 		= core.o c_routines.o f_routines.o miniconf_procedures.o miniconf.o 
 
 INCLUDE	 	 		= -I.
 

@@ -5,7 +5,7 @@ submodule(miniconf) miniconf_procedures
 
 contains
 
-    subroutine mincf_read_file(cfg,fn,errno)
+    module subroutine mincf_read_file(cfg,fn,errno)
         type(miniconf_c), intent(inout) :: cfg
         character(len=*), intent(in) :: fn
         integer, intent(out) :: errno
@@ -13,7 +13,7 @@ contains
         call c_mincf_read_file(cfg, fn, len(fn,c_size_t), errno)
     end subroutine
 
-    subroutine mincf_get_or_stop(cfg,key,buf)
+    module subroutine mincf_get_or_stop(cfg,key,buf)
         type(miniconf_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         character(len=*), intent(out) :: buf
@@ -31,7 +31,7 @@ contains
         end if
     end subroutine
 
-    subroutine mincf_get_or_error(cfg,key,buf,errno)
+    module subroutine mincf_get_or_error(cfg,key,buf,errno)
         type(miniconf_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         character(len=*), intent(out) :: buf
@@ -43,7 +43,7 @@ contains
                 & errno)
     end subroutine
 
-    subroutine mincf_get_exists(cfg,key,errno)
+    module subroutine mincf_get_exists(cfg,key,errno)
         type(miniconf_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer, intent(out) :: errno
@@ -51,7 +51,7 @@ contains
         call c_mincf_get_exists(cfg, key, len(key,c_size_t), errno)
     end subroutine
 
-    logical function mincf_exists(cfg,key)
+    module logical function mincf_exists(cfg,key)
         type(miniconf_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer :: errno
@@ -61,7 +61,7 @@ contains
         mincf_exists = ( errno .eq. MINCF_OK )
     end function
 
-    subroutine mincf_get_default(cfg,key,buf,defvalue,errno)
+    module subroutine mincf_get_default(cfg,key,buf,defvalue,errno)
         type(miniconf_c), intent(out) :: cfg
         character(len=*), intent(in) :: key, defvalue
         character(len=*), intent(out) :: buf
@@ -87,12 +87,12 @@ contains
                 & errno)
     end subroutine
 
-    logical function mincf_failed(errno)
+    module logical function mincf_failed(errno)
         integer, intent(in) :: errno
         mincf_failed = iand(errno,MINCF_ERROR) .ne. 0
     end function
 
-    logical function mincf_this_error(errno,errflag)
+    module logical function mincf_this_error(errno,errflag)
         integer, intent(in) :: errno,errflag
         mincf_this_error = iand(errno,errflag) .ne. 0
     end function

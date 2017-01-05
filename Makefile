@@ -35,6 +35,8 @@ LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
 LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
 LINK       			= $(LD) --build-id $(LDFLAGS)
 
+override CPPFLAGS	+= "-DVERSION=\"$(VERSION)\""
+
 all: libminiconf.so libminiconf.a miniconf.pc
 
 libminiconf.so: $(OBJECTS)

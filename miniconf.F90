@@ -119,6 +119,12 @@ module miniconf
             type(miniconf_c), intent(inout) :: cfg
         end subroutine
 
+        module subroutine mincf_print_error(errno,file,line)
+            integer, intent(in) :: errno
+            character(len=*), intent(in), optional :: file
+            integer, intent(in), optional :: line
+        end subroutine
+
     end interface
 
     !// C binding interfaces

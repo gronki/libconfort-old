@@ -110,5 +110,30 @@ contains
         mincf_this_error = iand(errno,errflag) .ne. 0
     end function
 
+    module subroutine mincf_print_error(errno,file,line)
+        integer, intent(in) :: errno
+        character(len=*), intent(in), optional :: file
+        integer, intent(in), optional :: line
+
+        character(len=128) :: prefix = "miniconf"
+
+        if ( present(file) .and. present(line) ) then
+            write (prefix,"(A,' line ',I0)") file,line
+        end if
+
+        if ( iand(errno,MINCF_ERROR) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"There was an error."
+        if ( iand(errno,MINCF_NOT_FOUND) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"The entry was not found."
+        if ( iand(errno,MINCF_FILE_NOT_FOUND) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"File not found."
+        if ( iand(errno,MINCF_SYNTAX_ERROR) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"Syntax error in configuration file."
+        if ( iand(errno,MINCF_ARGUMENT_ERROR) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"Incorrect argument."
+        if ( iand(errno,MINCF_MEMORY_ERROR) .ne. 0 ) &
+            & write (0,"(A,': ',A)") trim(prefix),"Memory error"
+    end subroutine
+
 
 end submodule

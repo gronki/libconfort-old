@@ -50,18 +50,15 @@ module miniconf
 
     interface mincf_read
 
+        module subroutine mincf_read_stdin(cfg,errno)
+            type(miniconf_c), intent(inout) :: cfg
+            integer, intent(inout), optional :: errno
+        end subroutine
+
         module subroutine mincf_read_file(cfg,fn,errno)
             type(miniconf_c), intent(inout) :: cfg
             character(len=*), intent(in) :: fn
-            integer, intent(out) :: errno
-        end subroutine
-
-        subroutine mincf_read_stdin(cfg,errno) &
-                & bind(C,name='fort_mincf_read_stdin')
-            use iso_c_binding
-            import :: miniconf_c
-            type(miniconf_c), intent(inout) :: cfg
-            integer(c_int), intent(out) :: errno
+            integer, intent(inout), optional :: errno
         end subroutine
 
     end interface
@@ -70,17 +67,11 @@ module miniconf
 
     interface mincf_get
 
-        module subroutine mincf_get_or_stop(cfg,key,buf)
-            type(miniconf_c), intent(out) :: cfg
-            character(len=*), intent(in) :: key
-            character(len=*), intent(out) :: buf
-        end subroutine
-
         module subroutine mincf_get_or_error(cfg,key,buf,errno)
             type(miniconf_c), intent(out) :: cfg
             character(len=*), intent(in) :: key
             character(len=*), intent(out) :: buf
-            integer, intent(out) :: errno
+            integer, intent(inout), optional :: errno
         end subroutine
 
         module subroutine mincf_get_exists(cfg,key,errno)
@@ -93,14 +84,9 @@ module miniconf
             type(miniconf_c), intent(out) :: cfg
             character(len=*), intent(in) :: key, defvalue
             character(len=*), intent(out) :: buf
-            integer, intent(out) :: errno
+            integer, intent(inout), optional :: errno
         end subroutine
 
-        module subroutine mincf_get_yolo(cfg,key,buf,defvalue)
-            type(miniconf_c), intent(out) :: cfg
-            character(len=*), intent(in) :: key, defvalue
-            character(len=*), intent(out) :: buf
-        end subroutine
     end interface
 
     !// error checking
@@ -143,6 +129,14 @@ module miniconf
     private :: c_mincf_get_default
 
     interface
+
+        subroutine c_mincf_read_stdin(cfg,errno) &
+                & bind(C,name='fort_mincf_read_stdin')
+            use iso_c_binding
+            import :: miniconf_c
+            type(miniconf_c), intent(inout) :: cfg
+            integer(c_int), intent(out) :: errno
+        end subroutine
 
         subroutine c_mincf_read_file(cfg,fn,sz,errno) &
                 & bind(C,name='fort_mincf_read_file')

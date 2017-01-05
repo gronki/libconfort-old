@@ -9,13 +9,13 @@ libdir 	 	 		= $(exec_prefix)/lib
 fmoddir				= $(libdir)/gfortran/modules
 docdir 	 	 		= $(datadir)/doc
 
-OBJECTS	 	 		= core.o c_routines.o f_routines.o miniconf_procedures.o miniconf.o 
+OBJECTS	 	 		= core.o c_routines.o f_routines.o miniconf_procedures.o miniconf.o
 
 INCLUDE	 	 		= -I.
 
 CC  	 	 		?= cc
 FC 		 	 		:= $(if $(filter $(FC),f77),f95,$(FC))
-CPP					:= cpp -nostdinc
+CPP					:= cpp -traditional -nostdinc
 
 # GNU Fortran (gfortran/f95)
 FFLAGS_f95			:= -std=f2008 -fimplicit-none

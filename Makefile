@@ -15,25 +15,25 @@ INCLUDE	 	 		= -I.
 
 CC  	 	 		?= cc
 FC 		 	 		:= $(if $(filter $(FC),f77),f95,$(FC))
-CPP					:= cpp -traditional -nostdinc
+FPP					:= cpp -traditional -nostdinc
 
-# GNU Fortran (gfortran/f95)
-FFLAGS_f95			:= -std=f2008 -fimplicit-none
-FFLAGS_f95_extra	:= -Wall -O2 -mieee-fp
+FFLAGS_f95			:= -g -Wall -std=f2008 -fimplicit-none -fbacktrace
+FFLAGS_gfortran		:= $(FFLAGS_f95)
+FFLAGS_ifort		:= -g -warn all -std08 -implicitnone
+FFLAGS_pgf95		:= -gopt -Minform=warn -Mdclchk
 
-# Intel Fortran (ifort)
-FFLAGS_ifort		:= -std08 -implicitnone
-FFLAGS_ifort_extra 	:= -warn all -O2 -mieee-fp
+CFLAGS 	 	 		?= -Wall -O2
+FFLAGS	 	 		?= -O2
+override FFLAGS		+= $(FFLAGS_$(FC))
 
-CFLAGS 	 	 		?= -Wall -O2 -mieee-fp
-FFLAGS	 	 		?= $(FFLAGS_$(FC)_extra)
-FFLAGS 		 		+= $(FFLAGS_$(FC))
-
-COMPILE.C 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -fPIC -c
-COMPILE.F    		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -fPIC -c
-LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
-LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
+COMPILE.C 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -c
+COMPILE.F    		= $(FC) $(INCLUDE) $(CPPFLAGS) $(FFLAGS) -c
+COMPILE.f    		= $(FC) $(INCLUDE) $(FFLAGS) -c
+LINK.C 	 	 		= $(CC) $(INCLUDE) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS)
+LINK.F    	 		= $(FC) $(INCLUDE) $(CPPFLAGS) $(FFLAGS) $(LDFLAGS)
+LINK.f    	 		= $(FC) $(INCLUDE) $(FFLAGS) $(LDFLAGS)
 LINK       			= $(LD) --build-id $(LDFLAGS)
+PREPROCESS.F		= $(FPP) $(INCLUDE) $(CPPFLAGS)
 
 override CPPFLAGS	+= "-DVERSION=\"$(VERSION)\""
 
@@ -48,11 +48,11 @@ libminiconf.a: $(OBJECTS)
 miniconf_procedures.o: miniconf.o
 
 %.o: %.c
-	$(COMPILE.C) $< -o $@
+	$(COMPILE.C) -fPIC $< -o $@
 %.o: %.f90
-	$(COMPILE.F) $< -o $@
+	$(COMPILE.f) -fPIC $< -o $@
 %.f90: %.F90
-	$(CPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
+	$(PREPROCESS.F) $< -o $@
 %.o: %.mod
 
 .INTERMEDIATE: $(OBJECTS) $(OBJECTS:.o=.mod) $(OBJECTS:.o=.smod)

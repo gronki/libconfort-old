@@ -3,12 +3,7 @@
 *.o
 *.mod
 /test/bin
-/dist
-/rpmbuild
 miniconf.pc
-/.build*log
-/libminiconf-*/
-*.rpm
 /libminiconf-*.tar.xz
 *.f90
 *.smod

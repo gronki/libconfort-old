@@ -23,7 +23,7 @@
 ************************************************/
 
 
-#include "miniconf.h"
+#include <miniconf.h>
 
 // This converts C string to Fortran whitespace-filled string
 void cstr_fix(char *buf, size_t sz) {

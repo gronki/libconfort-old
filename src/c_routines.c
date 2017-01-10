@@ -23,7 +23,7 @@
 ************************************************/
 
 
-#include "miniconf.h"
+#include <miniconf.h>
 
 
 /*** mincf_read ***

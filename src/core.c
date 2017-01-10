@@ -22,7 +22,7 @@
 
 ************************************************/
 
-#include "miniconf.h"
+#include <miniconf.h>
 
 int mincf_parse_stream(miniconf *cfg, FILE *in) {
 

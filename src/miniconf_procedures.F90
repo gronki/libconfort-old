@@ -1,4 +1,4 @@
-submodule(miniconf) miniconf_procedures
+submodule(miniconf) procedural
 
     use iso_c_binding
     use iso_fortran_env

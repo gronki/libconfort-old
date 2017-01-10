@@ -1,4 +1,4 @@
-VERSION			= 170102
+VERSION			= 170109
 
 prefix 	 	 	= /usr/local
 exec_prefix	 	= $(prefix)
@@ -10,7 +10,7 @@ fmoddir			= $(libdir)/finclude
 docdir 	 	 	= $(datadir)/doc
 licensedir 	 	= $(datadir)/licenses
 
-INCLUDE	 	 	= -I.
+INCLUDE	 	 	= -I. -Isrc
 
 CC  	 	 	:= cc
 CFLAGS 	 	 	?= -g -Wall -O3 -march=native
@@ -24,7 +24,7 @@ LINK.F    	 	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 OBJECTS = c_routines.o f_routines.o core.o miniconf_procedures.o miniconf.o
 
-override CPPFLAGS += "-DVERSION=\"$(VERSION)\""
+VPATH = src
 
 all: libminiconf.so libminiconf.a miniconf.pc
 
@@ -47,19 +47,22 @@ miniconf_procedures.o: miniconf.o
 installdirs:
 	install -d $(DESTDIR)$(includedir)
 	install -d $(DESTDIR)$(fmoddir)
+	install -d $(DESTDIR)$(licensedir)/miniconf
+	install -d $(DESTDIR)$(docdir)/miniconf
 	install -d $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
-	install -m 644 miniconf.h $(DESTDIR)$(includedir)
+	install -m 644 src/miniconf.h $(DESTDIR)$(includedir)
 	install -m 644 miniconf.mod $(DESTDIR)$(fmoddir)
 	install -p libminiconf.so $(DESTDIR)$(libdir)
 	install -m 644 libminiconf.a $(DESTDIR)$(libdir)
 	install -m 644 miniconf.pc $(DESTDIR)$(libdir)/pkgconfig/
 	install -m 644 LICENSE $(DESTDIR)$(licensedir)/miniconf/
+	cp -rv doc/* $(DESTDIR)$(docdir)/miniconf/
 
-docs: README.pdf
+docs: doc/README.pdf
 
-README.pdf: README.md
+doc/README.pdf: README.md
 	pandoc -s -f markdown_github -t latex $< -o $@
 
 miniconf.pc:

@@ -5,6 +5,17 @@ submodule(miniconf) miniconf_procedures
 
 contains
 
+
+    module logical function mincf_failed(errno)
+        integer, intent(in) :: errno
+        mincf_failed = iand(errno,MINCF_ERROR) .ne. 0
+    end function
+
+    module logical function mincf_this_error(errno,errflag)
+        integer, intent(in) :: errno,errflag
+        mincf_this_error = iand(errno,errflag) .ne. 0
+    end function
+
     module subroutine mincf_read_stdin(cfg,errno)
         type(miniconf_c), intent(inout) :: cfg
         integer, intent(inout), optional :: errno
@@ -100,15 +111,6 @@ contains
         end if
     end subroutine
 
-    module logical function mincf_failed(errno)
-        integer, intent(in) :: errno
-        mincf_failed = iand(errno,MINCF_ERROR) .ne. 0
-    end function
-
-    module logical function mincf_this_error(errno,errflag)
-        integer, intent(in) :: errno,errflag
-        mincf_this_error = iand(errno,errflag) .ne. 0
-    end function
 
     module subroutine mincf_print_error(errno,file,line)
         integer, intent(in) :: errno

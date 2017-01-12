@@ -3,7 +3,7 @@
 *.o
 *.mod
 /test/bin
-miniconf.pc
-/libminiconf-*.tar.xz
+confort.pc
+/libconfort-*.tar.xz
 *.f90
 *.smod

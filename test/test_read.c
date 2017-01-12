@@ -1,10 +1,10 @@
-#include <miniconf.h>
+#include <confort.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
 
 int main() {
-    miniconf cfg;
+    confort cfg;
     int result;
     result = mincf_read(&cfg,"nonexistent.cfg");
     test( result != MINCF_OK );

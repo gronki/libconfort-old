@@ -28,10 +28,10 @@ out/%: bin/%
 	mkdir -p out
 	bash runtest.sh $(subst out/,,$@)
 
-bin/%_F90: common.o %.f90 ../libminiconf.a
+bin/%_F90: common.o %.f90 ../libconfort.a
 	mkdir -p bin
 	$(LINK.F) -L.. $^ -o $@
-bin/%_c: common_c.o %.c ../libminiconf.a
+bin/%_c: common_c.o %.c ../libconfort.a
 	mkdir -p bin
 	$(LINK.C) -L.. $^ -o $@
 
@@ -43,7 +43,7 @@ bin/%_c: common_c.o %.c ../libminiconf.a
 	$(CPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
 %.o: %.mod
 
-../libminiconf.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)
+../libconfort.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)
 	$(MAKE) -C .. CC=$(CC) FC=$(FC)
 
 clean:

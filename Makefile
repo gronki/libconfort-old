@@ -1,4 +1,4 @@
-VERSION			= 170109
+VERSION			= 170112
 
 prefix 	 	 	= /usr/local
 exec_prefix	 	= $(prefix)
@@ -22,19 +22,19 @@ COMPILE.F    	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 LINK.C    	 	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 LINK.F    	 	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-OBJECTS = c_routines.o f_routines.o core.o miniconf_procedures.o miniconf.o
+OBJECTS = c_routines.o f_routines.o core.o procedural.o confort.o
 
 VPATH = src
 
-all: libminiconf.so libminiconf.a miniconf.pc
+all: libconfort.so libconfort.a confort.pc
 
-libminiconf.so: $(OBJECTS)
+libconfort.so: $(OBJECTS)
 	$(LINK.F) $(LDLIBS) -shared $^ -o $@
 
-libminiconf.a: $(OBJECTS)
+libconfort.a: $(OBJECTS)
 	ar rcs $@ $^
 
-miniconf_procedures.o: miniconf.o
+procedural.o: confort.o
 
 %.o: %.c
 	$(COMPILE.C) -fPIC $< -o $@
@@ -47,42 +47,42 @@ miniconf_procedures.o: miniconf.o
 installdirs:
 	install -d $(DESTDIR)$(includedir)
 	install -d $(DESTDIR)$(fmoddir)
-	install -d $(DESTDIR)$(licensedir)/miniconf
-	install -d $(DESTDIR)$(docdir)/miniconf
+	install -d $(DESTDIR)$(licensedir)/confort
+	install -d $(DESTDIR)$(docdir)/confort
 	install -d $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
-	install -m 644 src/miniconf.h $(DESTDIR)$(includedir)
-	install -m 644 miniconf.mod $(DESTDIR)$(fmoddir)
-	install -p libminiconf.so $(DESTDIR)$(libdir)
-	install -m 644 libminiconf.a $(DESTDIR)$(libdir)
-	install -m 644 miniconf.pc $(DESTDIR)$(libdir)/pkgconfig/
-	install -m 644 LICENSE $(DESTDIR)$(licensedir)/miniconf/
-	cp -rv doc/* $(DESTDIR)$(docdir)/miniconf/
+	install -m 644 src/confort.h $(DESTDIR)$(includedir)
+	install -m 644 confort.mod $(DESTDIR)$(fmoddir)
+	install -p libconfort.so $(DESTDIR)$(libdir)
+	install -m 644 libconfort.a $(DESTDIR)$(libdir)
+	install -m 644 confort.pc $(DESTDIR)$(libdir)/pkgconfig/
+	install -m 644 LICENSE $(DESTDIR)$(licensedir)/confort/
+	cp -rv doc/* $(DESTDIR)$(docdir)/confort/
 
 docs: doc/README.pdf
 
 doc/README.pdf: README.md
 	pandoc -s -f markdown_github -t latex $< -o $@
 
-miniconf.pc:
-	echo "Name: miniconf" > miniconf.pc
-	echo "Description: A minimalistic utility for reading configuration files. Easy to use Fortran 2008 bindings are included. Compatible with GCC and Intel compilers."  >> miniconf.pc
-	echo "Version: $(VERSION)"  >> miniconf.pc
-	echo "Libs: -L$(libdir) -lminiconf" >> miniconf.pc
-	echo "Cflags: -I$(includedir) -I$(fmoddir)" >> miniconf.pc
+confort.pc:
+	echo "Name: confort" > confort.pc
+	echo "Description: A minimalistic utility for reading configuration files. Easy to use Fortran 2008 bindings are included. Compatible with GCC and Intel compilers."  >> confort.pc
+	echo "Version: $(VERSION)"  >> confort.pc
+	echo "Libs: -L$(libdir) -lconfort" >> confort.pc
+	echo "Cflags: -I$(includedir) -I$(fmoddir)" >> confort.pc
 
 clean:
-	rm -f *.o *.mod *.smod *.f90 *.a *.so *.dll miniconf.pc
+	rm -f *.o *.mod *.smod *.f90 *.a *.so *.dll confort.pc
 	$(MAKE) -C 'test' clean
 
 distclean: clean
 	rm -f *.tar.xz
 
 dist: distclean
-	tar cvf libminiconf-$(VERSION).tar -C .. \
-			--exclude='libminiconf/.git' \
-			--exclude='libminiconf/*.tar' \
-			--transform="s/^libminiconf/libminiconf-$(VERSION)/" \
-			libminiconf
-	xz -f libminiconf-$(VERSION).tar
+	tar cvf libconfort-$(VERSION).tar -C .. \
+			--exclude='libconfort/.git' \
+			--exclude='libconfort/*.tar' \
+			--transform="s/^libconfort/libconfort-$(VERSION)/" \
+			libconfort
+	xz -f libconfort-$(VERSION).tar

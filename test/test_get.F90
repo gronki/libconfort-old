@@ -1,13 +1,13 @@
 program test_nonexistent_key
 
-    use miniconf
+    use confort
     use iso_fortran_env
     use iso_c_binding
     use tests_common
 #   include <macros>
 
     integer(c_int) :: errno
-    type(miniconf_c) :: cfg
+    type(confort_c) :: cfg
     character(len=150) :: buf
     character(len=*), parameter :: fn = "test.cfg"
     character(len=*), parameter :: key_wrong = "thereisnouschkey"

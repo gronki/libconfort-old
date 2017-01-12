@@ -23,7 +23,7 @@
 ************************************************/
 
 
-#include <miniconf.h>
+#include <confort.h>
 
 // This converts C string to Fortran whitespace-filled string
 void cstr_fix(char *buf, size_t sz) {
@@ -63,11 +63,11 @@ char *cstr_alloc(char *buf, size_t sz) {
 
 
 /* fortran binding */
-void fort_mincf_read_stdin(miniconf *cfg, int *errno) {
+void fort_mincf_read_stdin(confort *cfg, int *errno) {
     *errno = mincf_parse_stream(cfg,stdin);
 }
 
-void fort_mincf_read_file(miniconf *cfg, char *fn_str, size_t fn_sz, int *errno) {
+void fort_mincf_read_file(confort *cfg, char *fn_str, size_t fn_sz, int *errno) {
     FILE* f;
     char *fn = cstr_alloc(fn_str,fn_sz);
 
@@ -82,7 +82,7 @@ void fort_mincf_read_file(miniconf *cfg, char *fn_str, size_t fn_sz, int *errno)
     free(fn);
 }
 
-void fort_mincf_get(miniconf *cfg,
+void fort_mincf_get(confort *cfg,
             char *key_str, size_t key_sz,
             char *buf, size_t sz,
             int* errno) {
@@ -106,7 +106,7 @@ void fort_mincf_get(miniconf *cfg,
     free(key);
 }
 
-void fort_mincf_get_exists(miniconf *cfg,
+void fort_mincf_get_exists(confort *cfg,
             char *key_str, size_t key_sz,
             int* errno) {
     mincf_rec *rec;
@@ -123,7 +123,7 @@ void fort_mincf_get_exists(miniconf *cfg,
     free(key);
 }
 
-void fort_mincf_get_default(miniconf *cfg,
+void fort_mincf_get_default(confort *cfg,
         char *key_str, size_t key_sz,
         char *buf, size_t sz,
         char *defvalue_str, size_t defvalue_sz,

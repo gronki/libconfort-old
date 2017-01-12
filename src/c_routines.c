@@ -23,15 +23,15 @@
 ************************************************/
 
 
-#include <miniconf.h>
+#include <confort.h>
 
 
 /*** mincf_read ***
- * @param cfg      Reference to miniconf structure
+ * @param cfg      Reference to confort structure
  * @param fn       Filename. If NULL, stdin will be used.
  * @returns         Success (zero) or error (nonzero)
  */
-int mincf_read(miniconf *cfg, char *fn) {
+int mincf_read(confort *cfg, char *fn) {
     FILE *f;
     int errno = MINCF_OK;
 
@@ -45,7 +45,7 @@ int mincf_read(miniconf *cfg, char *fn) {
         errno = mincf_parse_stream(cfg,f);
         fclose(f);
     } else {
-        memset(cfg,0,sizeof(miniconf));
+        memset(cfg,0,sizeof(confort));
         errno = (MINCF_ERROR | MINCF_FILE_NOT_FOUND);
     }
     return errno;
@@ -54,7 +54,7 @@ int mincf_read(miniconf *cfg, char *fn) {
 
 
 /*** mincf_get ***
- * @param cfg       Reference to miniconf structure
+ * @param cfg       Reference to confort structure
  * @param key       Key to be searched for (cannot be NULL)
  * @param buf       Pointer to destination buffer
  * @param sz        Buffer size
@@ -63,7 +63,7 @@ int mincf_read(miniconf *cfg, char *fn) {
  *                  error value will be returned.
  * @returns         Success (zero) or error (nonzero)
  */
-int mincf_get(miniconf *cfg, char *key,
+int mincf_get(confort *cfg, char *key,
         char *buf, size_t sz,
         char *defvalue) {
     mincf_rec *rec;
@@ -90,7 +90,7 @@ int mincf_get(miniconf *cfg, char *key,
 
 }
 
-int mincf_exists(miniconf *cfg, char *key) {
+int mincf_exists(confort *cfg, char *key) {
     if (!key || !cfg)  return (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
 
     return mincf_record_query(cfg,key)

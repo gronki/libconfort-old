@@ -1,4 +1,4 @@
-submodule(miniconf) procedural
+submodule(confort) procedural
 
     use iso_c_binding
     use iso_fortran_env
@@ -17,7 +17,7 @@ contains
     end function
 
     module subroutine mincf_read_stdin(cfg,errno)
-        type(miniconf_c), intent(inout) :: cfg
+        type(confort_c), intent(inout) :: cfg
         integer, intent(inout), optional :: errno
         integer :: errno_local
 
@@ -27,13 +27,13 @@ contains
             call c_mincf_read_stdin(cfg,errno_local)
             if ( mincf_check_error(errno_local) ) then
                 call mincf_free(cfg)
-                error stop "miniconf: fatal error while reading the configuration"
+                error stop "confort: fatal error while reading the configuration"
             end if
         end if
     end subroutine
 
     module subroutine mincf_read_file(cfg,fn,errno)
-        type(miniconf_c), intent(inout) :: cfg
+        type(confort_c), intent(inout) :: cfg
         character(len=*), intent(in) :: fn
         integer, intent(inout), optional :: errno
         integer :: errno_local
@@ -44,14 +44,14 @@ contains
             call c_mincf_read_file(cfg, fn, len(fn,c_size_t), errno_local)
             if ( mincf_check_error(errno_local) ) then
                 call mincf_free(cfg)
-                error stop "miniconf: fatal error while reading the configuration"
+                error stop "confort: fatal error while reading the configuration"
             end if
         end if
 
     end subroutine
 
     module subroutine mincf_get_or_error(cfg,key,buf,errno)
-        type(miniconf_c), intent(out) :: cfg
+        type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         character(len=*), intent(out) :: buf
         integer, intent(inout), optional :: errno
@@ -69,14 +69,14 @@ contains
                     & errno_local)
             if ( mincf_check_error(errno_local) ) then
                 call mincf_free(cfg)
-                error stop "miniconf: fatal error while reading the configuration"
+                error stop "confort: fatal error while reading the configuration"
             end if
         end if
 
     end subroutine
 
     module subroutine mincf_get_exists(cfg,key,errno)
-        type(miniconf_c), intent(out) :: cfg
+        type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer, intent(out) :: errno
 
@@ -84,7 +84,7 @@ contains
     end subroutine
 
     module logical function mincf_exists(cfg,key)
-        type(miniconf_c), intent(out) :: cfg
+        type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer :: errno
 
@@ -94,7 +94,7 @@ contains
     end function
 
     module subroutine mincf_get_default(cfg,key,buf,defvalue,errno)
-        type(miniconf_c), intent(out) :: cfg
+        type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key, defvalue
         character(len=*), intent(out) :: buf
         integer, intent(inout), optional :: errno
@@ -117,7 +117,7 @@ contains
         character(len=*), intent(in), optional :: file
         integer, intent(in), optional :: line
 
-        character(len=128) :: prefix = "miniconf"
+        character(len=128) :: prefix = "confort"
 
         if ( present(file) .and. present(line) ) then
             write (prefix,"(A,' line ',I0)") file,line

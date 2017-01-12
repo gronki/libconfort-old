@@ -22,9 +22,9 @@
 
 ************************************************/
 
-#include <miniconf.h>
+#include <confort.h>
 
-int mincf_parse_stream(miniconf *cfg, FILE *in) {
+int mincf_parse_stream(confort *cfg, FILE *in) {
 
     char ch;
     int state = PST_B4LABEL;
@@ -53,7 +53,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
 
     // zero the structure
     if (!cfg)  return (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
-    memset(cfg, 0, sizeof(miniconf));
+    memset(cfg, 0, sizeof(confort));
 
     // if file handle is null, exit
     if (!in)  return (MINCF_ERROR | MINCF_ARGUMENT_ERROR);
@@ -82,7 +82,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
             tmprec = (mincf_rec*) realloc(cfg->records,
                 cfg -> records_sz * sizeof(mincf_rec) * 2);
             if (!tmprec) {
-                perror("miniconf: not enough memory");
+                perror("confort: not enough memory");
                 mincf_free(cfg);
                 return (MINCF_ERROR | MINCF_MEMORY_ERROR);
             }
@@ -105,7 +105,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
                 tmp = (char*)realloc(cfg->buffer,
                         cfg->buffer_sz*2);
                 if (!tmp) {
-                    perror("miniconf: not enough memory");
+                    perror("confort: not enough memory");
                     mincf_free(cfg);
                     return (MINCF_ERROR | MINCF_MEMORY_ERROR);
                 }
@@ -226,7 +226,7 @@ int mincf_parse_stream(miniconf *cfg, FILE *in) {
 }
 
 
-mincf_rec* mincf_record_query(miniconf *cfg, char *key) {
+mincf_rec* mincf_record_query(confort *cfg, char *key) {
     int key_sz,i;
     mincf_rec *rec;
 
@@ -249,7 +249,7 @@ mincf_rec* mincf_record_query(miniconf *cfg, char *key) {
     return NULL;
 }
 
-char *mincf_export_rec(miniconf *cfg, mincf_rec *rec, char *buf, size_t sz) {
+char *mincf_export_rec(confort *cfg, mincf_rec *rec, char *buf, size_t sz) {
     size_t n = (rec->vn < (sz-1)) ? rec->vn : (sz-1);
     memcpy(buf, &(cfg->buffer[rec->v0]), n);
     buf[n] = 0;
@@ -257,9 +257,9 @@ char *mincf_export_rec(miniconf *cfg, mincf_rec *rec, char *buf, size_t sz) {
 }
 
 /*** mincf_free ***
- * @param cfg       Reference to miniconf structure
+ * @param cfg       Reference to confort structure
  */
-void mincf_free(miniconf *cfg) {
+void mincf_free(confort *cfg) {
     if ( !cfg ) return;
     if ( cfg -> buffer != NULL ) {
         free(cfg -> buffer);

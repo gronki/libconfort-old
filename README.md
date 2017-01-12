@@ -1,2 +1,2 @@
-# miniconf
+# confort
 Mini config utility

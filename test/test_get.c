@@ -1,10 +1,10 @@
-#include <miniconf.h>
+#include <confort.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
 
 int main() {
-    miniconf cfg;
+    confort cfg;
     char buf[1024];
     char defvalue[] = "bu bu buuu";
     int ret;

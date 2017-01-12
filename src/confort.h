@@ -23,8 +23,8 @@
 ************************************************/
 
 
-#ifndef __MINICONF__
-#define __MINICONF__
+#ifndef __confort__
+#define __confort__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,34 +58,34 @@ typedef struct {
     size_t n_records;
     size_t records_sz;
     mincf_rec* records;
-} miniconf;
+} confort;
 
 // core functions
-int mincf_parse_stream(miniconf *cfg, FILE *in);
-mincf_rec* mincf_record_query(miniconf *cfg, char *key);
-char *mincf_export_rec(miniconf *cfg, mincf_rec *rec, char *buf, size_t sz);
-void mincf_free(miniconf *cfg);
+int mincf_parse_stream(confort *cfg, FILE *in);
+mincf_rec* mincf_record_query(confort *cfg, char *key);
+char *mincf_export_rec(confort *cfg, mincf_rec *rec, char *buf, size_t sz);
+void mincf_free(confort *cfg);
 
 // C interface
-int mincf_read(miniconf *cfg, char *fn);
-int mincf_get(miniconf *cfg, char *key, char *buf, size_t sz, char *defvalue);
-int mincf_exists(miniconf *cfg, char *key);
+int mincf_read(confort *cfg, char *fn);
+int mincf_get(confort *cfg, char *key, char *buf, size_t sz, char *defvalue);
+int mincf_exists(confort *cfg, char *key);
 
 // Fortran interface
 void cstr_fix(char *buf, size_t sz);
 char *cstr_alloc(char *buf, size_t sz);
-void fort_mincf_read_stdin(miniconf *cfg, int *errno);
-void fort_mincf_read_file(miniconf *cfg, char *fn_str, size_t fn_sz, int *errno);
-void fort_mincf_get_default(miniconf *cfg,
+void fort_mincf_read_stdin(confort *cfg, int *errno);
+void fort_mincf_read_file(confort *cfg, char *fn_str, size_t fn_sz, int *errno);
+void fort_mincf_get_default(confort *cfg,
         char *key_str, size_t key_sz,
         char *buf, size_t sz,
         char *defvalue_str, size_t defvalue_sz,
         int* errno);
-void fort_mincf_get(miniconf *cfg,
+void fort_mincf_get(confort *cfg,
             char *key_str, size_t key_sz,
             char *buf, size_t sz,
             int* errno);
-void fort_mincf_get_exists(miniconf *cfg,
+void fort_mincf_get_exists(confort *cfg,
             char *key_str, size_t key_sz,
             int* errno);
 #endif

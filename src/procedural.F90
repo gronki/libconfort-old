@@ -1,3 +1,22 @@
+! /******************* C O N F O R T *******************
+!     (c) 2017 Dominik Gronkiewicz <gronki@gmail.com>
+!     Distributed under Simplified BSD License.
+!
+!     Example file:
+!     --------------------------
+!     key1 value1
+!
+!     # comment
+!     key2 value2 value3   #  another comment
+!
+!     key3 "very long # text
+!     with newline"
+!
+!     key4   5.0
+!     key5   6.0  7.5  # hoorayy it's the end
+! ******************************************************/
+
+
 submodule(confort) procedural
 
     use iso_c_binding

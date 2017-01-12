@@ -1,9 +1,6 @@
-!  /************** M I N I C O N F ***************
-!    This small library allows to read a simple
-!     configuration file. Data can be read from
-!     any FILE* handle (for example stdin).
-!     Dominik Gronkiewicz 2016  gronki@gmail.com
-!     MIT license.
+! /******************* C O N F O R T *******************
+!     (c) 2017 Dominik Gronkiewicz <gronki@gmail.com>
+!     Distributed under Simplified BSD License.
 !
 !     Example file:
 !     --------------------------
@@ -17,9 +14,7 @@
 !
 !     key4   5.0
 !     key5   6.0  7.5  # hoorayy it's the end
-!     --------------------------
-!
-! ************************************************/
+! ******************************************************/
 
 
 module confort

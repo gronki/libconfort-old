@@ -13,9 +13,9 @@ licensedir 	 	= $(datadir)/licenses
 INCLUDE	 	 	= -I. -Isrc
 
 CC  	 	 	:= cc
-CFLAGS 	 	 	?= -g -Wall -O3 -march=native
-FC 		 	 	:= f95
-FFLAGS	 	 	?= -g -Wall -O3 -march=native -fbacktrace -std=f2008
+CFLAGS 	 	 	?= -g -Wall -O2
+FC 		 	 	:= f95 -std=f2008 -fimplicit-none
+FFLAGS	 	 	?= -g -Wall -O2
 
 COMPILE.C    	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.F    	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c

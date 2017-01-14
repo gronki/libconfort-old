@@ -76,13 +76,11 @@ clean:
 	rm -f *.o *.mod *.smod *.f90 *.a *.so *.dll confort.pc
 	$(MAKE) -C 'test' clean
 
-distclean: clean
-	rm -f *.tar.xz
-
-dist: distclean
+dist: clean
 	tar cvf libconfort-$(VERSION).tar -C .. \
 			--exclude='libconfort/.git' \
 			--exclude='libconfort/*.tar' \
+			--exclude='libconfort/*.tar.gz' \
 			--transform="s/^libconfort/libconfort-$(VERSION)/" \
 			libconfort
-	xz -f libconfort-$(VERSION).tar
+	gzip -f libconfort-$(VERSION).tar

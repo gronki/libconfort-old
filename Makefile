@@ -60,10 +60,10 @@ install: installdirs all
 	install -m 644 LICENSE $(DESTDIR)$(licensedir)/confort/
 	cp -rv doc/* $(DESTDIR)$(docdir)/confort/
 
-docs: doc/README.pdf
+docs: README.html
 
-doc/README.pdf: README.md
-	pandoc -s -f markdown_github -t latex $< -o $@
+%.html: %.md
+	pandoc -s -f markdown_github -t html5 $< -o $@
 
 confort.pc:
 	echo "Name: confort" > confort.pc

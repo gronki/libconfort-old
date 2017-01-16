@@ -8,4 +8,4 @@ The library is still in very early stages of developement. The core and procedur
 
 ## Terms of use
 
-Distributed under the Simplified BSD License.
+Distributed under the Simplified BSD License. See the LICENSE document for full text and copyright info.

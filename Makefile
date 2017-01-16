@@ -1,4 +1,4 @@
-VERSION			= 170112
+VERSION			= 170116
 
 prefix 	 	 	= /usr/local
 exec_prefix	 	= $(prefix)
@@ -52,13 +52,17 @@ installdirs:
 	install -d $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
+	# headers
 	install -m 644 src/confort.h $(DESTDIR)$(includedir)
 	install -m 644 confort.mod $(DESTDIR)$(fmoddir)
-	install -p libconfort.so $(DESTDIR)$(libdir)
+	# libraries
+	install libconfort.so $(DESTDIR)$(libdir)
 	install -m 644 libconfort.a $(DESTDIR)$(libdir)
+	# pkg config
 	install -m 644 confort.pc $(DESTDIR)$(libdir)/pkgconfig/
+	# docs
 	install -m 644 LICENSE $(DESTDIR)$(licensedir)/confort/
-	cp -rv doc/* $(DESTDIR)$(docdir)/confort/
+	install -m 644 README.html $(DESTDIR)$(docdir)/confort/
 
 docs: README.html
 

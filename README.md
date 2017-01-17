@@ -6,6 +6,36 @@
 
 The library is still in very early stages of developement. The core and procedural interface is considered stable and ready for production use. The object interface is under development and it may change in the future.
 
+## Setup
+
+### Requirements
+
+Since **libconfort** relies on the latest Fortran 2008 features, it requires **GCC 6** compiler suite. It should be freely available on most of the distributions. To build the library on CentOS 6/7, you need to do the following:
+```sh
+# install the scl
+sudo yum install centos-release-scl
+# install the GCC 6 collection
+sudo yum install devtoolset-6-{gcc{,-gfortran},make}
+# run the sub-shell with toolset enabled
+scl enable devtoolset-6 bash
+# build the library as usual...
+```
+
+### Build and installation
+
+Installation is easy and typical. The easiest way is to install from provided rpm files. If you want or need to install it from source, first build the library by typing:
+```sh
+make
+```
+Then, install it in ``/usr/local`` by executing
+```sh
+sudo make install
+```
+or, if you want to sandbox the library for easy removal, execute:
+```sh
+sudo make install prefix=/opt/confort
+```
+
 ## Terms of use
 
 Distributed under the Simplified BSD License. See the LICENSE document for full text and copyright info.

@@ -6,6 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -15,6 +52,23 @@
 <p><strong>libconfort</strong> is a small library written in C and modern Fortran. There are numerous excellent libraries for handling configuration files written for C. None of them has a native, easy-to-use interface for Fortran, which is the leading language for numerical computing. The intrinsic I/O handling in Fortran is decent, however it lacks the full flexibility that a proper configuration file utility provides (such as comments or quoted strings).</p>
 <p><strong>libconfort</strong>, which stands for <strong>conf</strong>iguration <strong>for</strong> <strong>Fort</strong>ran, is attempting to fill that niche. The library core is written in C, however all routines are wrapped into native Fortran interfaces, which provides a seamless experience for a Fortran programmer. The upcoming object interface is going to provide even better experience.</p>
 <p>The library is still in very early stages of developement. The core and procedural interface is considered stable and ready for production use. The object interface is under development and it may change in the future.</p>
+<h2 id="setup">Setup</h2>
+<h3 id="requirements">Requirements</h3>
+<p>Since <strong>libconfort</strong> relies on the latest Fortran 2008 features, it requires <strong>GCC 6</strong> compiler suite. It should be freely available on most of the distributions. To build the library on CentOS 6/7, you need to do the following:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="co"># install the scl</span>
+<span class="kw">sudo</span> yum install centos-release-scl
+<span class="co"># install the GCC 6 collection</span>
+<span class="kw">sudo</span> yum install devtoolset-6-<span class="dt">{gcc{,-gfortran},make}</span>
+<span class="co"># run the sub-shell with toolset enabled</span>
+<span class="kw">scl</span> enable devtoolset-6 bash
+<span class="co"># build the library as usual...</span></code></pre></div>
+<h3 id="build-and-installation">Build and installation</h3>
+<p>Installation is easy and typical. The easiest way is to install from provided rpm files. If you want or need to install it from source, first build the library by typing:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">make</span></code></pre></div>
+<p>Then, install it in <code>/usr/local</code> by executing</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">sudo</span> make install</code></pre></div>
+<p>or, if you want to sandbox the library for easy removal, execute:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">sudo</span> make install prefix=/opt/confort</code></pre></div>
 <h2 id="terms-of-use">Terms of use</h2>
 <p>Distributed under the Simplified BSD License. See the LICENSE document for full text and copyright info.</p>
 </body>

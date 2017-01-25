@@ -77,10 +77,13 @@ confort.pc:
 	echo "Cflags: -I$(includedir) -I$(fmoddir)" >> confort.pc
 
 clean:
-	rm -f *.o *.mod *.smod *.f90 *.a *.so *.dll confort.pc
+	rm -f *.o *.smod *.f90 *.dll confort.pc
 	$(MAKE) -C 'test' clean
 
-dist: clean
+distclean: clean
+	rm -rfv libconfort.a confort.mod libconfort.so
+
+dist: distclean
 	tar cvf libconfort-$(VERSION).tar -C .. \
 			--exclude='libconfort/.git' \
 			--exclude='libconfort/*.tar' \

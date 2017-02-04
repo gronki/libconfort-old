@@ -1,6 +1,6 @@
 ! /******************* C O N F O R T *******************
 !     (c) 2017 Dominik Gronkiewicz <gronki@gmail.com>
-!     Distributed under Simplified BSD License.
+!     Distributed under MIT License.
 !
 !     Example file:
 !     --------------------------

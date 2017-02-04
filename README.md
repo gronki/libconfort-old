@@ -38,4 +38,4 @@ sudo make install prefix=/opt/confort
 
 ## Terms of use
 
-Distributed under the Simplified BSD License. See the LICENSE document for full text and copyright information.
+Distributed under the MIT License. See the LICENSE document for full text and copyright information.

@@ -16,6 +16,7 @@
 !     key5   6.0  7.5  # hoorayy it's the end
 ! ******************************************************/
 
+# include "fortran_features.h"
 
 module confort
 
@@ -123,11 +124,12 @@ module confort
     end interface
 
     !// C binding interfaces
-
+#   if !__NO_SUBMODULES
     private :: c_mincf_read_file
     private :: c_mincf_get
     private :: c_mincf_get_exists
     private :: c_mincf_get_default
+#   endif
 
     interface
 
@@ -184,5 +186,11 @@ module confort
         end subroutine
 
     end interface
+
+# if __NO_SUBMODULES
+# define __STRIP_SUBMODULE 1
+contains
+# include "procedural.F90"
+# endif
 
 end module

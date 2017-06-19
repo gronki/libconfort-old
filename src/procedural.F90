@@ -15,27 +15,30 @@
 !     key4   5.0
 !     key5   6.0  7.5  # hoorayy it's the end
 ! ******************************************************/
+# include "fortran_features.h"
 
-
+# if !__NO_SUBMODULES
 submodule(confort) procedural
 
     use iso_c_binding
     use iso_fortran_env
 
 contains
+# endif
 
+# if !__NO_SUBMODULES || __STRIP_SUBMODULE
 
-    module logical function mincf_failed(errno)
+    logical function mincf_failed(errno)
         integer, intent(in) :: errno
         mincf_failed = iand(errno,MINCF_ERROR) .ne. 0
     end function
 
-    module logical function mincf_this_error(errno,errflag)
+    logical function mincf_this_error(errno,errflag)
         integer, intent(in) :: errno,errflag
         mincf_this_error = iand(errno,errflag) .ne. 0
     end function
 
-    module subroutine mincf_read_stdin(cfg,errno)
+    subroutine mincf_read_stdin(cfg,errno)
         type(confort_c), intent(inout) :: cfg
         integer, intent(inout), optional :: errno
         integer :: errno_local
@@ -51,7 +54,7 @@ contains
         end if
     end subroutine
 
-    module subroutine mincf_read_file(cfg,fn,errno)
+    subroutine mincf_read_file(cfg,fn,errno)
         type(confort_c), intent(inout) :: cfg
         character(len=*), intent(in) :: fn
         integer, intent(inout), optional :: errno
@@ -69,7 +72,7 @@ contains
 
     end subroutine
 
-    module subroutine mincf_get_or_error(cfg,key,buf,errno)
+    subroutine mincf_get_or_error(cfg,key,buf,errno)
         type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         character(len=*), intent(out) :: buf
@@ -94,7 +97,7 @@ contains
 
     end subroutine
 
-    module subroutine mincf_get_exists(cfg,key,errno)
+    subroutine mincf_get_exists(cfg,key,errno)
         type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer, intent(out) :: errno
@@ -102,7 +105,7 @@ contains
         call c_mincf_get_exists(cfg, key, len(key,c_size_t), errno)
     end subroutine
 
-    module logical function mincf_exists(cfg,key)
+    logical function mincf_exists(cfg,key)
         type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key
         integer :: errno
@@ -112,7 +115,7 @@ contains
         mincf_exists = ( errno .eq. MINCF_OK )
     end function
 
-    module subroutine mincf_get_default(cfg,key,buf,defvalue,errno)
+    subroutine mincf_get_default(cfg,key,buf,defvalue,errno)
         type(confort_c), intent(out) :: cfg
         character(len=*), intent(in) :: key, defvalue
         character(len=*), intent(out) :: buf
@@ -131,7 +134,7 @@ contains
     end subroutine
 
 
-    module subroutine mincf_print_error(errno,file,line)
+    subroutine mincf_print_error(errno,file,line)
         integer, intent(in) :: errno
         character(len=*), intent(in), optional :: file
         integer, intent(in), optional :: line
@@ -156,5 +159,11 @@ contains
             & write (0,"(A,': ',A)") trim(prefix),"Memory error"
     end subroutine
 
+# else
+    module procedural_dummy
+    end module
+# endif
 
+# if !__NO_SUBMODULES
 end submodule
+# endif

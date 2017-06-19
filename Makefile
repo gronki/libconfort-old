@@ -1,4 +1,4 @@
-VERSION			= 170117
+VERSION			= 170619
 
 prefix 	 	 	= /usr/local
 exec_prefix	 	= $(prefix)
@@ -6,7 +6,7 @@ bindir		 	= $(exec_prefix)/bin
 datadir	 	 	= $(prefix)/share
 includedir 	 	= $(prefix)/include
 libdir 	 	 	= $(exec_prefix)/lib
-fmoddir			= $(libdir)/finclude
+fmoddir			= $(libdir)/gfortran/modules
 docdir 	 	 	= $(datadir)/doc
 licensedir 	 	= $(datadir)/licenses
 
@@ -14,32 +14,30 @@ INCLUDE	 	 	= -I. -Isrc
 
 CC  	 	 	:= cc
 CFLAGS 	 	 	?= -g -Wall -O2
-FC 		 	 	:= f95 -std=f2008 -fimplicit-none
-FFLAGS	 	 	?= -g -Wall -O2
-
-COMPILE.C    	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
-COMPILE.F    	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
-LINK.C    	 	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
-LINK.F    	 	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+FC 		 	 	:= f95
+FFLAGS	 	 	?= $(CFLAGS) -fimplicit-none -Wpedantic
+FPP				?= $(FC) -E
 
 OBJECTS = c_routines.o f_routines.o core.o procedural.o confort.o
 
 VPATH = src
 
-all: libconfort.so libconfort.a confort.pc
+all: libconfort.so libconfort.a
 
 libconfort.so: $(OBJECTS)
-	$(LINK.F) $(LDLIBS) -shared $^ -o $@
+	$(FC) $(LDFLAGS) -shared $^ $(LDLIBS) -o $@
 
 libconfort.a: $(OBJECTS)
-	ar rcs $@ $^
+	$(AR) rcs $@ $^
 
 procedural.o: confort.o
 
 %.o: %.c
-	$(COMPILE.C) -fPIC $< -o $@
-%.o: %.F90
-	$(COMPILE.F) -fPIC $< -o $@
+	$(CC) -fPIC $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+%.o: %.f90
+	$(FC) -fPIC $(INCLUDE) $(FFLAGS) -c $< -o $@
+%.f90: %.F90
+	$(FPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
 %.o: %.mod
 
 .INTERMEDIATE: $(OBJECTS)
@@ -59,7 +57,13 @@ install: installdirs all
 	install libconfort.so $(DESTDIR)$(libdir)
 	install -m 644 libconfort.a $(DESTDIR)$(libdir)
 	# pkg config
-	install -m 644 confort.pc $(DESTDIR)$(libdir)/pkgconfig/
+	@echo "Name: confort" | tee $(DESTDIR)$(libdir)/pkgconfig/confort.pc
+	@echo "Description: A minimalistic utility for reading configuration files. \
+	Easy to use Fortran 2008 bindings are included. Compatible with GCC \
+	and Intel compilers." | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
+	@echo "Version: $(VERSION)" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
+	@echo "Libs: -L$(libdir) -lconfort" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
+	@echo "Cflags: -I$(includedir) -I$(fmoddir)" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
 	# docs
 	install -m 644 LICENSE $(DESTDIR)$(licensedir)/confort/
 	install -m 644 README.html $(DESTDIR)$(docdir)/confort/
@@ -69,15 +73,8 @@ docs: README.html
 %.html: %.md
 	pandoc -s -f markdown_github -t html5 $< -o $@
 
-confort.pc:
-	echo "Name: confort" > confort.pc
-	echo "Description: A minimalistic utility for reading configuration files. Easy to use Fortran 2008 bindings are included. Compatible with GCC and Intel compilers."  >> confort.pc
-	echo "Version: $(VERSION)"  >> confort.pc
-	echo "Libs: -L$(libdir) -lconfort" >> confort.pc
-	echo "Cflags: -I$(includedir) -I$(fmoddir)" >> confort.pc
-
 clean:
-	rm -f *.o *.smod *.f90 *.dll confort.pc
+	$(RM) *.o *.smod *.f90 *.dll confort.pc
 	$(MAKE) -C 'test' clean
 
 distclean: clean

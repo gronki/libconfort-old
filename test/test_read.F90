@@ -6,13 +6,12 @@ program test_nonexistent_file
     use tests_common
 #   include <macros>
 
-    integer(c_int) :: errno
-    type(confort_c) :: cfg
+    type(config) :: cfg
     character(len=*), parameter :: fn = "Tegoplikuniema"
 
-    call mincf_read_file(cfg, fn, errno)
+    call mincf_read_file(cfg, fn)
 
-    call test(errno .ne. 0)
+    call test(cfg % err() .ne. 0)
 
     call mincf_free(cfg)
 

@@ -4,21 +4,16 @@ TESTS		 = $(FSOURCES:.F90=_F90) $(CSOURCES:.c=_c)
 PROGS 	  	 = $(addprefix bin/,$(TESTS))
 CERTS 	  	 = $(addprefix out/,$(TESTS))
 
-INCLUDE	 	 = -I. -I..
+INCLUDE	 	 = -I. -I.. -I../src
 
 CC  	 	 := cc
 FC 		 	 := f95
-CPP			 := cpp -nostdinc
+FPP			 := $(FC) -E
 
-CFLAGS 	 	 := -Og -Wall -mieee-fp
-FFLAGS	 	 := $(CFLAGS) -std=f2008 -fimplicit-none
-FFLAGS 		 += -fbackslash -fcheck=all -fbacktrace
-
-COMPILE.C 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) -c
-COMPILE.F    = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) -c
-LINK.C 	 	 = $(CC) $(INCLUDE) $(CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
-LINK.F    	 = $(FC) $(INCLUDE) $(CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
-LINK.O       = $(LD) --build-id $(LDFLAGS)
+CFLAGS 	 	 := -Og -Wall -mieee-fp -g
+FFLAGS	 	 := $(CFLAGS) -std=f2008
+FFLAGS 		 += -fbackslash -fcheck=all -fbacktrace -ffree-line-length-none
+CPPFLAGS	 := -D__CONFORT_DEBUG
 
 ################################################
 
@@ -30,21 +25,21 @@ out/%: bin/%
 
 bin/%_F90: common.o %.f90 ../libconfort.a
 	mkdir -p bin
-	$(LINK.F) -L.. $^ -o $@
+	$(FC) $(INCLUDE) $(FFLAGS) $(LDFLAGS) -L.. $^ -o $@
 bin/%_c: common_c.o %.c ../libconfort.a
 	mkdir -p bin
-	$(LINK.C) -L.. $^ -o $@
+	$(CC) $(INCLUDE) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -L.. $^ -o $@
 
 %.o: %.c
-	$(COMPILE.C) $< -o $@
+	$(CC)  $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 %.o: %.f90
-	$(COMPILE.F) $< -o $@
+	$(FC)  $(INCLUDE) $(FFLAGS) -c $< -o $@
 %.f90: %.F90
-	$(CPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
+	$(FPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
 %.o: %.mod
 
-../libconfort.a: $(wildcard ../*.F90) $(wildcard ../*.c) $(wildcard ../*.h)
-	$(MAKE) -C .. CC=$(CC) FC=$(FC)
+../libconfort.a: $(wildcard ../src/*.F90) $(wildcard ../src/*.c) $(wildcard ../src/*.h)
+	$(MAKE) -C .. CC="$(CC)" FC="$(FC)" CFLAGS="$(CFLAGS)" FFLAGS="$(FFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
 clean:
 	rm -rfv *.o *.mod *.pass *.fail bin out

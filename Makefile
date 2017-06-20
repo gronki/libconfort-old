@@ -18,7 +18,7 @@ FC 		 	 	:= f95
 FFLAGS	 	 	?= $(CFLAGS) -fimplicit-none -Wpedantic
 FPP				?= $(FC) -E
 
-OBJECTS = c_routines.o f_routines.o core.o procedural.o confort.o
+OBJECTS = c_routines.o f_routines.o core.o confort.o
 
 VPATH = src
 
@@ -29,8 +29,6 @@ libconfort.so: $(OBJECTS)
 
 libconfort.a: $(OBJECTS)
 	$(AR) rcs $@ $^
-
-procedural.o: confort.o
 
 %.o: %.c
 	$(CC) -fPIC $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -c $< -o $@

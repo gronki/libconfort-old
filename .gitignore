@@ -5,5 +5,5 @@
 /test/bin
 confort.pc
 /libconfort-*.tar.gz
-*.f90
+/*.f90
 *.smod

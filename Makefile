@@ -1,22 +1,22 @@
 VERSION			= 170619
 
-prefix 	 	 	= /usr/local
-exec_prefix	 	= $(prefix)
-bindir		 	= $(exec_prefix)/bin
-datadir	 	 	= $(prefix)/share
-includedir 	 	= $(prefix)/include
-libdir 	 	 	= $(exec_prefix)/lib
+prefix			= /usr/local
+exec_prefix	= $(prefix)
+bindir			= $(exec_prefix)/bin
+datadir			= $(prefix)/share
+includedir	= $(prefix)/include
+libdir			= $(exec_prefix)/lib
 fmoddir			= $(libdir)/gfortran/modules
-docdir 	 	 	= $(datadir)/doc
-licensedir 	 	= $(datadir)/licenses
+docdir			= $(datadir)/doc
+licensedir	= $(datadir)/licenses
 
 INCLUDE	 	 	= -I. -Isrc
 
-CC  	 	 	:= cc
-CFLAGS 	 	 	?= -g -Wall -O2
-FC 		 	 	:= f95
-FFLAGS	 	 	?= $(CFLAGS) -fimplicit-none -Wpedantic
-FPP				?= $(FC) -E
+CC			= gcc
+CFLAGS	= -g -Wall -O2
+FC 			= gfortran
+FFLAGS	= $(CFLAGS) -fimplicit-none -fbacktrace -pedantic
+FPP			= $(FC) -E
 
 OBJECTS = c_routines.o f_routines.o core.o confort.o
 

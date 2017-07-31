@@ -7,11 +7,12 @@ program test_nonexistent_file
 #   include <macros>
 
     type(config) :: cfg
+    integer :: errno
     character(len=*), parameter :: fn = "Tegoplikuniema"
 
-    call mincf_read_file(cfg, fn)
+    call mincf_read_file(cfg, fn, errno)
 
-    call test(cfg % err() .ne. 0)
+    call test(errno .ne. 0)
 
     call mincf_free(cfg)
 

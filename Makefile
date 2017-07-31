@@ -1,25 +1,21 @@
-VERSION			= 170619
+VERSION = 170731
 
-prefix			= /usr/local
-exec_prefix	= $(prefix)
-bindir			= $(exec_prefix)/bin
-datadir			= $(prefix)/share
-includedir	= $(prefix)/include
-libdir			= $(exec_prefix)/lib
-fmoddir			= $(libdir)/gfortran/modules
-docdir			= $(datadir)/doc
-licensedir	= $(datadir)/licenses
+prefix = /usr/local
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+datadir = $(prefix)/share
+includedir = $(prefix)/include
+libdir = $(exec_prefix)/lib
+fmoddir = $(libdir)/gfortran/modules
 
-INCLUDE	 	 	= -I. -Isrc
+INCLUDE = -I. -Isrc
 
-CC			= gcc
-CFLAGS	= -g -Wall -O2
-FC 			= gfortran
-FFLAGS	= $(CFLAGS) -fimplicit-none -fbacktrace -pedantic
-FPP			= $(FC) -E
+CC = gcc
+FC = gfortran
+CFLAGS = -g -Wall -O2
+FFLAGS = -g -Wall -O2 -pedantic -fimplicit-none -fbacktrace
 
 OBJECTS = c_routines.o f_routines.o core.o confort.o
-
 VPATH = src
 
 all: libconfort.so libconfort.a
@@ -34,17 +30,12 @@ libconfort.a: $(OBJECTS)
 	$(CC) -fPIC $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 %.o: %.f90
 	$(FC) -fPIC $(INCLUDE) $(FFLAGS) -c $< -o $@
-%.f90: %.F90
-	$(FPP) $(INCLUDE) $(CPPFLAGS) $< -o $@
-%.o: %.mod
-
-.INTERMEDIATE: $(OBJECTS)
+%.o: %.F90
+	$(FC) -fPIC $(INCLUDE) $(CPPFLAGS) $(FFLAGS) -c $< -o $@
 
 installdirs:
 	install -d $(DESTDIR)$(includedir)
 	install -d $(DESTDIR)$(fmoddir)
-	install -d $(DESTDIR)$(licensedir)/confort
-	install -d $(DESTDIR)$(docdir)/confort
 	install -d $(DESTDIR)$(libdir)/pkgconfig
 
 install: installdirs all
@@ -62,27 +53,11 @@ install: installdirs all
 	@echo "Version: $(VERSION)" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
 	@echo "Libs: -L$(libdir) -lconfort" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
 	@echo "Cflags: -I$(includedir) -I$(fmoddir)" | tee -a $(DESTDIR)$(libdir)/pkgconfig/confort.pc
-	# docs
-	install -m 644 LICENSE $(DESTDIR)$(licensedir)/confort/
-	install -m 644 README.html $(DESTDIR)$(docdir)/confort/
-
-docs: README.html
-
-%.html: %.md
-	pandoc -s -f markdown_github -t html5 $< -o $@
 
 clean:
-	$(RM) *.o *.smod *.f90 *.dll confort.pc
+	$(RM) *.o *.smod 
 	$(MAKE) -C 'test' clean
 
 distclean: clean
-	rm -rfv libconfort.a confort.mod libconfort.so
+	$(RM) -rv libconfort.a confort.mod libconfort.so
 
-dist: distclean
-	tar cvf libconfort-$(VERSION).tar -C .. \
-			--exclude='libconfort/.git' \
-			--exclude='libconfort/*.tar' \
-			--exclude='libconfort/*.tar.gz' \
-			--transform="s/^libconfort/libconfort-$(VERSION)/" \
-			libconfort
-	gzip -f libconfort-$(VERSION).tar
